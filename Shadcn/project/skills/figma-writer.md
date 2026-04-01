@@ -377,6 +377,8 @@ function hexToRgb(hex) {
 >
 > **Thứ tự set sizing**: luôn `appendChild` vào parent TRƯỚC, rồi mới set `layoutSizingHorizontal/Vertical = "FILL"` — Figma cần biết parent context trước khi tính FILL.
 >
+> **KHÔNG gọi `resize()` sau khi set `layoutSizingHorizontal/Vertical = "FILL"`** — `resize(w, h)` sẽ reset sizing về FIXED và đọc `node.width` tại thời điểm gọi. Nếu layout chưa re-compute FILL, `.width` trả về HUG width từ content (ví dụ 640px) thay vì FILL width từ parent (ví dụ 1180px) → frame bị cứng lại với width sai. Để set height mà không ảnh hưởng FILL ngang: dùng `layoutSizingVertical = "FILL"` hoặc hardcode `resize(SIDEBAR_REMAINING_W, h)` trước khi set FILL.
+>
 > **DS component instances**: mọi instance nằm trong VERTICAL parent cần fill chiều ngang phải set `inst.layoutSizingHorizontal = "FILL"` sau khi tạo — DS component mặc định HUG width, không tự FILL.
 
 ### Gap — giá trị theo context
