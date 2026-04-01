@@ -1,7 +1,7 @@
 # Figma Design System Workflow
 
 ## Mục tiêu
-Tự động hóa pipeline: mô tả screen → wireframe → component map → Figma script → paste vào Scripter plugin → có UI trên Figma.
+Tự động hóa pipeline: mô tả screen → wireframe → component map → Figma script → chạy qua use_figma MCP → có UI trên Figma.
 
 ## Design System
 - **Library**: shadcn/ui
@@ -19,7 +19,7 @@ Skill 3: UI Composer           → screens/<name>/component-map.json
         ↓
 Skill 4: Figma Writer          → screens/<name>/figma-script.js
         ↓
-[User paste vào Scripter plugin trong Figma → chạy → UI xuất hiện]
+use_figma MCP                  → UI xuất hiện trực tiếp trên Figma canvas
 ```
 
 ## Skills
@@ -51,7 +51,7 @@ Bắt buộc check theo `skills/skill-guide.md` trước khi save:
 - Dùng `figma.importComponentSetByKeyAsync(key)` → `.defaultVariant` → `.createInstance()`
 - KHÔNG dùng `importComponentByKeyAsync` (cần individual variant key, không phải set key)
 - Dùng auto-layout (`layoutMode`, `itemSpacing`, `padding`) thay vì set x/y tay
-- Component `null` trong component-map → `addPlaceholder()` với label rõ ràng
+- Component `null` trong component-map → xem TODO.md (đang redesign custom component spec)
 
 ### UI Composer
 - Chỉ dùng component có trong `ds-index.json`
@@ -61,7 +61,5 @@ Bắt buộc check theo `skills/skill-guide.md` trước khi save:
 - Không đề cập tên shadcn component trong wireframe
 - Format: Meta → Layout Structure → Sections → Interactions → States
 
-## Vấn đề đang mở
-- Text override trong component instances chưa test (text label của nav items vẫn là default từ DS)
-- Bridge plugin (real-time Claude ↔ Figma) chưa build — dùng paste-run trước
-- ds-index.json còn lớn (~8600 lines) — cân nhắc tách ds-variables.json + ds-styles.json sau
+## Việc đang làm / backlog
+Xem `TODO.md`
