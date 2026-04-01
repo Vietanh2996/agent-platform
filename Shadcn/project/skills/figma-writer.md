@@ -4,9 +4,13 @@
 Bạn là một Figma plugin developer. Nhiệm vụ là đọc component-map.json của một màn hình và generate một Figma Plugin Script (JavaScript) hoàn chỉnh — user paste vào Scripter plugin trong Figma và chạy để tạo ra màn hình.
 
 ## Input
+
+**Luôn đọc:**
 - `screens/<screen-name>/component-map.json` — mapping components đã có
-- `ds/ds-keys.json` — flat lookup `component name → Figma key`
-- `ds/design-skill.md` — design knowledge (đọc để hiểu context, không chứa keys cụ thể)
+- `ds/ds-component-keys.json` — flat lookup `component name → Figma key`
+
+**Không cần đọc:**
+- `ds/ds-styles.json`, `ds/ds-variables.json` — keys đã được component-mapper resolve và lưu vào component-map.json rồi, figma-writer chỉ nhận và áp dụng
 
 ## Output
 File: `screens/<screen-name>/figma-script.js`
@@ -129,8 +133,10 @@ main().catch(console.error);
 ```js
 const rootFrame = figma.createFrame();
 rootFrame.name = "<ScreenName>";
-rootFrame.resize(1440, 900);
-rootFrame.layoutMode = "HORIZONTAL";   // sidebar-left layout
+rootFrame.layoutMode = "HORIZONTAL";   // set layoutMode TRƯỚC
+rootFrame.primaryAxisSizingMode = "FIXED"; // lock sizing modes SAU layoutMode
+rootFrame.counterAxisSizingMode = "FIXED"; // ← nếu resize() gọi TRƯỚC layoutMode, Figma reset về AUTO
+rootFrame.resize(1440, 900);               // resize SAU khi modes đã lock
 rootFrame.itemSpacing = 0;
 rootFrame.fills = [{ type: "SOLID", color: hexToRgb("#ffffff") }];
 rootFrame.clipsContent = true;
@@ -162,8 +168,10 @@ function createGroup(parent, name, { width = 260, paddingTop = 0, paddingBottom 
 ```
 
 ### 4. Import component set từ DS
+`fillWidth = true` → set `layoutSizingHorizontal = "FILL"` sau khi append (dùng cho items trong VERTICAL parent như sidebar, list).
+
 ```js
-async function addComponent(parent, key, variantProps = {}, warnings = []) {
+async function addComponent(parent, key, variantProps = {}, warnings = [], { fillWidth = false, wireframeRef = "" } = {}) {
   try {
     const set = await figma.importComponentSetByKeyAsync(key); // ← dùng Set, không phải Component
     const inst = set.defaultVariant.createInstance();
@@ -171,15 +179,19 @@ async function addComponent(parent, key, variantProps = {}, warnings = []) {
       inst.setProperties(variantProps);
     }
     parent.appendChild(inst);
+    if (fillWidth) inst.layoutSizingHorizontal = "FILL"; // ← FILL sau khi có parent context
     logProps(inst, key); // log để debug property names
     return inst;
   } catch (e) {
     console.warn("Import failed:", key.slice(0, 8), e.message);
     warnings.push(`Import failed: ${key.slice(0, 8)}`);
-    return addPlaceholder(parent, `⚠️ ${key.slice(0, 8)}`);
+    return addPlaceholder(parent, wireframeRef || key.slice(0, 8));
   }
 }
 ```
+
+> **Khi nào dùng `fillWidth: true`**: mọi component nằm trong frame `VERTICAL` cần full width (sidebar menu buttons, list items, card rows). Không cần cho component trong HORIZONTAL parent (button groups, toolbar).
+
 
 ### 5. Set component properties (text, boolean, icon swap)
 ```js
@@ -219,7 +231,9 @@ function logProps(inst, key) {
 ```
 
 ### 7. Text override khi chưa biết property name (fallback)
-Dùng khi component chưa có trong bảng property names đã biết:
+> **KHÔNG dùng `overrideFirstText` cho component có nhiều TEXT props** (Textarea, Combobox, Input...) — nó set TEXT prop đầu tiên tìm được, có thể là sai node (character count, label, placeholder nhầm lẫn nhau). Workflow đúng: chạy script lần đầu → đọc `logProps` console → hardcode đúng prop name vào `setProps`.
+
+Chỉ dùng `overrideFirstText` khi component chắc chắn chỉ có **1 TEXT prop** (ví dụ: PopoverTrigger, GroupLabel):
 
 ```js
 function overrideFirstText(inst, newText, warnings = []) {
@@ -332,13 +346,20 @@ function addPlaceholder(parent, wireframeRef, { width = 228, height = 48 } = {})
 > `addComponent` nhận `wireframeRef` làm tham số thứ 5, truyền vào `addPlaceholder` khi import fail.
 
 ### 10. Divider
+Dùng Frame 1px thay vì `createLine()` — Line node 0px height không ổn định trong auto-layout (Figma có thể bỏ qua hoặc collapse).
+
 ```js
-function addDivider(parent, width = 260) {
-  const line = figma.createLine();
-  line.resize(width, 0);
-  line.strokes = [{ type: "SOLID", color: hexToRgb("#e5e7eb") }];
-  line.strokeWeight = 1;
-  parent.appendChild(line);
+function addDivider(parent) {
+  const divider = figma.createFrame();
+  divider.name = "Divider";
+  divider.layoutMode = "HORIZONTAL";
+  divider.primaryAxisSizingMode = "AUTO";
+  divider.counterAxisSizingMode = "AUTO";
+  divider.resize(4, 1); // sẽ bị override bởi FILL
+  divider.fills = [{ type: "SOLID", color: hexToRgb("#e5e7eb") }];
+  parent.appendChild(divider);
+  divider.layoutSizingHorizontal = "FILL"; // fill width của parent
+  // height FIXED = 1px (đã resize)
 }
 ```
 
@@ -355,48 +376,38 @@ function hexToRgb(hex) {
 
 ---
 
-## Quy tắc Layout & Sizing
+## Quy tắc Layout & Sizing (API implementation)
 
-### Sizing mode — quyết định theo vai trò của frame
+> Sizing được đọc từ fields `sizing` và `align` trong component-map — không tự suy ra từ zone rules.
 
-**Width:**
-| Frame | Mode |
+### Cách áp dụng sizing field
+
+| `sizing.width` | Code |
 |---|---|
-| Screen gốc, sidebar, avatar, icon button | `FIXED` — `resize(w, h)` |
-| Frame chiếm phần còn lại trong parent HORIZONTAL | `FILL` — `frame.layoutSizingHorizontal = "FILL"` |
-| Frame wrap nội dung theo chiều ngang (toolbar group, badge row) | `HUG` — `primaryAxisSizingMode = "AUTO"` (nếu layoutMode HORIZONTAL) hoặc `counterAxisSizingMode = "AUTO"` (nếu layoutMode VERTICAL) |
+| `"FILL"` | `parent.appendChild(frame); frame.layoutSizingHorizontal = "FILL";` |
+| `"FIXED"` | `frame.resize(sizing.widthValue, h)` trước appendChild |
+| `"HUG"` | `frame.counterAxisSizingMode = "AUTO"` (VERTICAL) hoặc `frame.primaryAxisSizingMode = "AUTO"` (HORIZONTAL) |
 
-**Height:**
-| Frame | Mode |
+| `sizing.height` | Code |
 |---|---|
-| Screen gốc, sidebar | `FIXED` |
-| Frame chứa danh sách item dọc (section, card, panel) | `HUG` — `primaryAxisSizingMode = "AUTO"` (khi layoutMode VERTICAL) |
-| Frame chiếm phần còn lại chiều dọc | `FILL` — `frame.layoutSizingVertical = "FILL"` |
+| `"FILL"` | `parent.appendChild(frame); frame.layoutSizingVertical = "FILL";` |
+| `"FIXED"` | `frame.resize(w, sizing.heightValue)` |
+| `"HUG"` | `frame.primaryAxisSizingMode = "AUTO"` (VERTICAL) |
 
-> **Nguyên tắc**: chỉ `resize()` khi thực sự FIXED. Nếu content xác định kích thước → HUG. Nếu parent xác định → FILL. KHÔNG hardcode `resize()` rồi để auto-layout engine conflict.
+| `align` | Code |
+|---|---|
+| `horizontal: "CENTER"` | `parent.counterAxisAlignItems = "CENTER"` trên parent |
+| `vertical: "CENTER"` | `parent.primaryAxisAlignItems = "CENTER"` trên parent |
+
+> **Thứ tự bắt buộc cho mọi frame có auto-layout:**
+> 1. `layoutMode = "HORIZONTAL" | "VERTICAL"` — set đầu tiên
+> 2. `counterAxisSizingMode = "FIXED"` nếu chiều đó FIXED — set trước resize
+> 3. `resize(w, h)` — sau layoutMode và sizing modes FIXED
+> 4. `primaryAxisSizingMode = "AUTO"` nếu HUG — **set SAU resize()**, không trước. `resize()` reset mode về FIXED nên AUTO phải override lại sau.
+> 5. `appendChild(frame)` vào parent
+> 6. `layoutSizingHorizontal/Vertical = "FILL"` nếu FILL — **set SAU appendChild**
 >
-> **Thứ tự set sizing**: luôn `appendChild` vào parent TRƯỚC, rồi mới set `layoutSizingHorizontal/Vertical = "FILL"` — Figma cần biết parent context trước khi tính FILL.
->
-> **DS component instances**: mọi instance nằm trong VERTICAL parent cần fill chiều ngang phải set `inst.layoutSizingHorizontal = "FILL"` sau khi tạo — DS component mặc định HUG width, không tự FILL.
-
-### Gap — giá trị theo context
-
-| Context | `itemSpacing` |
-|---|---|
-| Nav item list (sidebar menu buttons) | `2` |
-| Toolbar buttons (trái/phải) | `4` |
-| Trong card dọc (vd: textarea + toolbar) | `8` |
-| Center panel — heading, tool row, input card | `24` |
-| Header / divider row | `0` |
-
-### Padding — giá trị theo context
-
-| Context | Padding |
-|---|---|
-| Sidebar section group | `paddingLeft/Right = 8`, `paddingTop/Bottom = 4` |
-| Card (input, content box) | `padding = 12` |
-| Toolbar inner | `paddingLeft/Right = 0` (gap đủ rồi) |
-| User block | `paddingLeft/Right = 12`, `paddingTop/Bottom = 4` |
+> **DS instances**: luôn set `layoutSizingHorizontal = "FILL"` sau appendChild khi `sizing.width = "FILL"`. Dùng `{ fillWidth: true }` trong `addComponent`.
 
 ---
 
@@ -412,7 +423,7 @@ function hexToRgb(hex) {
 8. **`stateVariants`** → chỉ render state `default`
 9. **`component = null, type = "text"`** → dùng `renderTextEntry()` với keys từ `textStyle`/`colorToken` fields
 10. **`component = null` (không có type)** → dùng `addPlaceholder()` — render "awaiting for design" dashed frame
-11. **Sizing**: áp dụng đúng HUG/FILL/FIXED theo bảng "Quy tắc Layout & Sizing" — KHÔNG hardcode `resize()` cho frame có content động
+11. **Sizing**: đọc `sizing` field từ component-map, áp dụng theo bảng "Quy tắc Layout & Sizing". KHÔNG tự suy ra FILL/HUG/FIXED — mọi quyết định sizing đã có trong component-map. Section `sizing.width = "FILL"` → `layoutSizingHorizontal = "FILL"` sau appendChild. Section `sizing.height = "FILL"` → `layoutSizingVertical = "FILL"` sau appendChild. Component có `sizing.width = "FILL"` trong VERTICAL parent → `fillWidth: true`
 12. **Cuối script**: báo warnings + `figma.notify`
 
 ---
@@ -447,16 +458,27 @@ async function main() {
     catch (e) { console.warn("Icon import fail:", name); }
   }
 
-  // Sidebar frame
+  // Root frame (1440×900, HORIZONTAL)
+  const rootFrame = figma.createFrame();
+  rootFrame.name = "Fleet / Home";
+  rootFrame.resize(1440, 900);
+  rootFrame.layoutMode = "HORIZONTAL";
+  rootFrame.itemSpacing = 0;
+  rootFrame.fills = [{ type: "SOLID", color: hexToRgb("#ffffff") }];
+  rootFrame.clipsContent = true;
+  figma.currentPage.appendChild(rootFrame);
+
+  // Sidebar: FIXED width (260), FILL height
   const sidebar = figma.createFrame();
   sidebar.name = "Fleet / Sidebar";
   sidebar.layoutMode = "VERTICAL";
-  sidebar.primaryAxisSizingMode = "AUTO";
-  sidebar.counterAxisSizingMode = "FIXED";
+  sidebar.primaryAxisSizingMode = "AUTO";   // HUG height tạm, sẽ FILL sau
+  sidebar.counterAxisSizingMode = "FIXED";  // FIXED width
   sidebar.resize(260, 100);
   sidebar.itemSpacing = 0;
   sidebar.fills = [{ type: "SOLID", color: hexToRgb("#ffffff") }];
-  figma.currentPage.appendChild(sidebar);
+  rootFrame.appendChild(sidebar);           // append TRƯỚC
+  sidebar.layoutSizingVertical = "FILL";    // FILL height SAU khi có parent
 
   // Header row: [Fleet ˅] [□]
   const headerRow = figma.createFrame();
@@ -474,6 +496,7 @@ async function main() {
 
   const trigger = await addComponent(headerRow, KEYS.sidebarPopoverTrigger, { "State": "Default" }, warnings);
   overrideFirstText(trigger, "Fleet", warnings);
+  // headerRow là HORIZONTAL → không cần fillWidth
 
   await addComponent(headerRow, KEYS.sidebarHeaderBtn, { "State": "Default" }, warnings);
 
@@ -487,7 +510,8 @@ async function main() {
   ];
   for (const item of navItems) {
     const inst = await addComponent(navGroup, KEYS.sidebarMenuButton,
-      { "Type": "Badge", "State": item.state, "Collapsed": "False" }, warnings);
+      { "Type": "Badge", "State": item.state, "Collapsed": "False" }, warnings,
+      { fillWidth: true }); // ← FILL width vì navGroup là VERTICAL
     setProps(inst, {
       "Text#3278:82":        item.label,
       "Badge Text#3278:108": item.badge,
@@ -501,7 +525,8 @@ async function main() {
   // My Agents section
   const agentsGroup = createGroup(sidebar, "My Agents", { paddingTop: 4, paddingBottom: 4 });
   const agentsLabel = await addComponent(agentsGroup, KEYS.sidebarGroupLabel,
-    { "Type": "Action", "State": "Default", "Text Size": "sm" }, warnings);
+    { "Type": "Action", "State": "Default", "Text Size": "sm" }, warnings,
+    { fillWidth: true });
   setProps(agentsLabel, { "Label#3278:69": "My Agents" }, warnings);
   // type: "text" — keys do component-mapper điền từ ds/design-skill.md
   await renderTextEntry(agentsGroup, {
@@ -515,7 +540,8 @@ async function main() {
   // Explore section
   const exploreGroup = createGroup(sidebar, "Explore", { paddingTop: 4, paddingBottom: 4 });
   const exploreLabel = await addComponent(exploreGroup, KEYS.sidebarGroupLabel,
-    { "Type": "Default", "State": "Default", "Text Size": "sm" }, warnings);
+    { "Type": "Default", "State": "Default", "Text Size": "sm" }, warnings,
+    { fillWidth: true });
   setProps(exploreLabel, { "Label#3278:69": "Explore" }, warnings);
 
   const exploreItems = [
@@ -526,7 +552,8 @@ async function main() {
   ];
   for (const item of exploreItems) {
     const inst = await addComponent(exploreGroup, KEYS.sidebarMenuButton,
-      { "Type": "Simple", "State": "Default", "Collapsed": "False" }, warnings);
+      { "Type": "Simple", "State": "Default", "Collapsed": "False" }, warnings,
+      { fillWidth: true }); // ← FILL width trong VERTICAL group
     setProps(inst, { "Text#3278:82": item.label, "Icon#3281:0": true }, warnings);
     await swapIcon(inst, "Icon Name#3278:95", item.icon, icons, warnings);
   }
@@ -538,17 +565,18 @@ async function main() {
 
 // ── Helpers ──────────────────────────────────────────────────────
 
-async function addComponent(parent, key, variantProps = {}, warnings = []) {
+async function addComponent(parent, key, variantProps = {}, warnings = [], { fillWidth = false, wireframeRef = "" } = {}) {
   try {
     const set = await figma.importComponentSetByKeyAsync(key);
     const inst = set.defaultVariant.createInstance();
     if (Object.keys(variantProps).length) inst.setProperties(variantProps);
     parent.appendChild(inst);
+    if (fillWidth) inst.layoutSizingHorizontal = "FILL";
     logProps(inst, key);
     return inst;
   } catch (e) {
     warnings.push(`Import failed: ${key.slice(0,8)}`);
-    return addPlaceholder(parent, `⚠️ ${key.slice(0,8)}`);
+    return addPlaceholder(parent, wireframeRef || key.slice(0,8));
   }
 }
 
@@ -594,12 +622,16 @@ function createGroup(parent, name, { width = 260, paddingTop = 0, paddingBottom 
   return frame;
 }
 
-function addDivider(parent, width = 260) {
-  const line = figma.createLine();
-  line.resize(width, 0);
-  line.strokes = [{ type: "SOLID", color: hexToRgb("#e5e7eb") }];
-  line.strokeWeight = 1;
-  parent.appendChild(line);
+function addDivider(parent) {
+  const divider = figma.createFrame();
+  divider.name = "Divider";
+  divider.layoutMode = "HORIZONTAL";
+  divider.primaryAxisSizingMode = "AUTO";
+  divider.counterAxisSizingMode = "AUTO";
+  divider.resize(4, 1);
+  divider.fills = [{ type: "SOLID", color: hexToRgb("#e5e7eb") }];
+  parent.appendChild(divider);
+  divider.layoutSizingHorizontal = "FILL";
 }
 
 function addPlaceholder(parent, label, { width = 228, height = 32 } = {}) {

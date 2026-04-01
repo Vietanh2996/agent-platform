@@ -18,7 +18,7 @@ Format tên style trong DS: `text-{size}/leading-{type}/{weight}`
 | Caption, metadata, timestamp | `text-xs/leading-normal/normal` | `845e2807d7bd156cd78a7dc1a9d57c3ae578e309` |
 | Caption medium | `text-xs/leading-normal/medium` | `006730eaa0f3ba116dc4881634a5dcd69333cb84` |
 
-> Tra key đầy đủ trong `ds/ds-index.json` → `textStyles[]` → lọc theo `name`.
+> Tra key đầy đủ trong `ds/ds-styles.json` → `textStyles[]` → lọc theo `name`.
 
 ---
 
@@ -35,11 +35,46 @@ Tất cả từ collection `3. Mode` trong DS.
 | Background mặc định | `base/background` | `41ae341e2a8c738b58666f48c3417066cca83b29` |
 | Background muted (tag, chip) | `base/muted` | `113e689019a8f3e232297f4fdaee4c0098e3f4c2` |
 
-> Tra key đầy đủ trong `ds/ds-index.json` → `variables.byCollection["3. Mode"][]`.
+> Tra key đầy đủ trong `ds/ds-variables.json` → `variables.byCollection["3. Mode"][]`.
 
 ---
 
 ## Layout Patterns
+
+### Zone Sizing — FIXED / FILL / HUG
+
+Quyết định sizing mode theo vai trò của zone trong layout:
+
+| Zone | Width | Height |
+|---|---|---|
+| Root screen frame | FIXED | FIXED |
+| Panel/sidebar cố định (cột trái/phải) | FIXED | **FILL** |
+| Main content (phần còn lại) | **FILL** | **FILL** |
+| Section group trong panel dọc | FIXED (= panel width) | HUG |
+| Header/footer bar ngang | FILL | FIXED |
+| Card/widget trong main content | FILL | HUG hoặc FIXED |
+| DS component instance trong VERTICAL parent | **FILL** | — (giữ nguyên DS default) |
+
+> Cách implement (thứ tự gọi API, `resize()` vs `layoutSizingVertical`) → tra `skills/figma-writer.md`.
+
+### Gap (itemSpacing) theo context
+
+| Context | `itemSpacing` |
+|---|---|
+| Nav item list (sidebar menu buttons) | `2` |
+| Toolbar buttons | `4` |
+| Trong card dọc (textarea + toolbar) | `8` |
+| Center panel — heading, tool row, input card | `24` |
+| Header row / divider row | `0` |
+
+### Padding theo context
+
+| Context | Padding |
+|---|---|
+| Sidebar section group | `left/right = 8`, `top/bottom = 4` |
+| Card / input box | `12` all sides |
+| Toolbar inner | `left/right = 0` (gap đủ rồi) |
+| User block (bottom sidebar) | `left/right = 12`, `top/bottom = 4` |
 
 ### Sidebar
 - **Width**: 260px cố định
@@ -47,13 +82,8 @@ Tất cả từ collection `3. Mode` trong DS.
   - Trái: `Sidebar / PopoverTrigger` (app name + dropdown)
   - Phải: `Sidebar / Header Button` (toggle icon)
 - **Section group**: frame `VERTICAL`, `paddingTop/Bottom: 4`, `paddingLeft/Right: 8`, `itemSpacing: 2`
-- **Divider**: giữa các section, full width (260px)
+- **Divider**: giữa các section, full width (FILL)
 - **Background**: trắng `#ffffff`, stroke phải `#e5e7eb` 1px
-
-### Spacing
-- Section padding: 4px top/bottom
-- Item spacing trong group: 2px
-- Sidebar padding ngoài: 0 left/right, 0 top, 8 bottom
 
 ---
 

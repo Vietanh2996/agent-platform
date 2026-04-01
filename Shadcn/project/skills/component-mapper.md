@@ -4,8 +4,15 @@
 Bạn là một design system specialist. Nhiệm vụ là đọc wireframe của một màn hình và map từng UI element sang component shadcn/ui tương ứng trong design system, kèm theo variant props và token chính xác.
 
 ## Input
+
+**Luôn đọc:**
 - `screens/<screen-name>/wireframe.md` — wireframe đã được tạo ở Skill 2
-- `ds/ds-index.json` — danh sách toàn bộ component sets và variantOptions
+- `ds/ds-components.json` — danh sách toàn bộ component sets và variantOptions
+- `ds/design-skill.md` — bảng text style và color token thường dùng (keys inline, tra nhanh)
+
+**Chỉ đọc khi cần:**
+- `ds/ds-styles.json` — khi key text style không có trong bảng `design-skill.md` → tra `textStyles[]` lọc theo `name`
+- `ds/ds-variables.json` — khi key color token không có trong bảng `design-skill.md` → tra `variables.byCollection["3. Mode"][]`
 
 ## Output
 File: `screens/<screen-name>/component-map.json`
@@ -21,6 +28,24 @@ File: `screens/<screen-name>/component-map.json`
 7. **`label`** — text content chính của element (lấy từ wireframe). Bắt buộc nếu component có text hiển thị
 8. **`iconName`** — Lucide icon name (lấy từ annotation `[icon: X]` trong wireframe). Bắt buộc nếu element có icon. **Không tự quyết định icon ở đây** — chỉ truyền từ wireframe sang
 9. **`badge`** — text/số trong badge nếu có (lấy từ wireframe)
+10. **`sizing`** — dịch trực tiếp từ sizing annotation trong wireframe sang fields chuẩn. **Bắt buộc** cho mọi section. Bắt buộc cho block/component khi sizing không hiển nhiên từ parent context.
+11. **`align`** — thêm khi wireframe ghi `[centered]` hoặc block cần căn giữa trong parent.
+
+### Quy tắc dịch sizing annotation → fields
+
+| Wireframe annotation | `sizing` field |
+|---|---|
+| `[fills remaining width]` | `{ "width": "FILL" }` |
+| `[fills remaining height]` | `{ "height": "FILL" }` |
+| `[fills remaining space]` | `{ "width": "FILL", "height": "FILL" }` |
+| `[fixed Xpx]` | `{ "width": "FIXED", "widthValue": X }` hoặc `{ "height": "FIXED", "heightValue": X }` |
+| `[hug content]` hoặc không ghi | `{ "width": "HUG" }` / `{ "height": "HUG" }` |
+| `[centered]` | thêm `"align": { "horizontal": "CENTER", "vertical": "CENTER" }` |
+
+**Quy tắc cứng theo position:**
+- Section `position: "left"` → luôn `{ "width": "FIXED", "widthValue": 260, "height": "FILL" }` (bất kể wireframe ghi gì)
+- Section `position: "main"` → luôn `{ "width": "FILL", "height": "FILL" }`
+- Component/DS instance trong VERTICAL parent → thêm `"sizing": { "width": "FILL" }` (DS mặc định HUG, cần override)
 
 ## Cách chọn component
 
@@ -67,6 +92,7 @@ Khi gặp một UI element trong wireframe:
     {
       "name": "<tên section từ wireframe>",
       "position": "<left | top | main | right | bottom | modal | drawer>",
+      "sizing": { "width": "<FILL | FIXED | HUG>", "widthValue": "<nếu FIXED>", "height": "<FILL | FIXED | HUG>", "heightValue": "<nếu FIXED>" },
       "components": [
         {
           "id": "<kebab-case unique id>",
@@ -78,6 +104,8 @@ Khi gặp một UI element trong wireframe:
           "badge": "<badge text/number, null nếu không có>",
           "textStyle": "<key DS text style — chỉ điền khi type='text', tra ds/design-skill.md>",
           "colorToken": "<key DS color variable — chỉ điền khi type='text', tra ds/design-skill.md>",
+          "sizing": { "width": "<FILL | FIXED | HUG>", "widthValue": "<nếu FIXED>", "height": "<FILL | FIXED | HUG>", "heightValue": "<nếu FIXED>" },
+          "align": { "horizontal": "<CENTER | START | END>", "vertical": "<CENTER | START | END>" },
           "variantProps": {
             "<PropName>": "<value>"
           },
@@ -104,6 +132,8 @@ Khi gặp một UI element trong wireframe:
 - `badge` — text/số trong badge, null nếu không có
 - `textStyle` — key DS text style, **chỉ điền khi `type: "text"`**. Tra `ds/design-skill.md` để biết dùng key nào cho mục đích nào
 - `colorToken` — key DS color variable, **chỉ điền khi `type: "text"`**. Tra `ds/design-skill.md`
+- `sizing` — ở **level section**: bắt buộc, theo quy tắc position. Ở **level component**: thêm khi cần override sizing mặc định (center panel, fixed-size block, v.v.)
+- `align` — thêm khi component/block cần được căn giữa trong parent. Figma Writer set alignment trên parent frame.
 - `stateVariants` — variants khi ở trạng thái khác (chỉ render default khi generate)
 - `repeat` — nếu component lặp lại (list, table rows, nav items...)
 
@@ -122,6 +152,7 @@ Khi gặp một UI element trong wireframe:
 {
   "name": "Sidebar",
   "position": "left",
+  "sizing": { "width": "FIXED", "widthValue": 260, "height": "FILL" },
   "components": [
     {
       "id": "nav-dashboard",

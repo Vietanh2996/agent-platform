@@ -28,12 +28,22 @@ Skill 4: Figma Writer          → screens/<name>/figma-script.js
 - `skills/figma-writer.md` — generate Figma Plugin JS script
 
 ## DS Data Files
-- `ds/ds-index.json` — 168 component sets với variantOptions, 802 variables, 310 text styles, 34 effect styles
-- `ds/ds-keys.json` — flat lookup `component name → Figma key` (dùng trong figma-writer)
+- `ds/ds-components.json` — 168 component sets với variantOptions (dùng trong component-mapper)
+- `ds/ds-component-keys.json` — flat lookup `component name → Figma key` (dùng trong figma-writer)
+- `ds/ds-variables.json` — 802 variables theo collections (dùng khi cần color token)
+- `ds/ds-styles.json` — 310 text styles + 34 effect styles (dùng khi cần text style key)
+- `ds/ds-index.json` — file gốc đầy đủ (nguồn để regenerate các file trên nếu DS update)
 - `ds/design-decisions.md` — quyết định thiết kế tích lũy theo thời gian
 
 ## Screens đã làm
 - `screens/fleet-sidebar/` — sidebar navigation (tested, working)
+
+## Khi thêm rule vào bất kỳ skill file nào
+
+Bắt buộc check theo `skills/skill-guide.md` trước khi save:
+1. Rule có đủ tổng quát không? (không specific cho 1 component/màn hình)
+2. Đã có rule tương tự chưa? → merge thay vì duplicate
+3. Đúng layer chưa? (design-skill / figma-writer / component-mapper / wireframe-planner)
 
 ## Quy tắc quan trọng
 
