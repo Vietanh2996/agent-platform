@@ -129,8 +129,10 @@ main().catch(console.error);
 ```js
 const rootFrame = figma.createFrame();
 rootFrame.name = "<ScreenName>";
-rootFrame.resize(1440, 900);
-rootFrame.layoutMode = "HORIZONTAL";   // sidebar-left layout
+rootFrame.layoutMode = "HORIZONTAL";        // 1. layoutMode TRƯỚC
+rootFrame.primaryAxisSizingMode = "FIXED"; // 2. lock sizing modes TRƯỚC resize
+rootFrame.counterAxisSizingMode = "FIXED";
+rootFrame.resize(1440, 900);               // 3. resize SAU
 rootFrame.itemSpacing = 0;
 rootFrame.fills = [{ type: "SOLID", color: hexToRgb("#ffffff") }];
 rootFrame.clipsContent = true;
@@ -357,27 +359,25 @@ function hexToRgb(hex) {
 
 ## Quy tắc Layout & Sizing
 
-### Sizing mode — quyết định theo vai trò của frame
+### Sizing — đọc từ component-map, không tự suy ra
 
-**Width:**
-| Frame | Mode |
+> Quyết định FIXED/FILL/HUG cho từng zone → tra `ds/design-skill.md`. Section này chỉ chứa cách implement đúng bằng API.
+
+| `sizing` | Code |
 |---|---|
-| Screen gốc, sidebar, avatar, icon button | `FIXED` — `resize(w, h)` |
-| Frame chiếm phần còn lại trong parent HORIZONTAL | `FILL` — `frame.layoutSizingHorizontal = "FILL"` |
-| Frame wrap nội dung theo chiều ngang (toolbar group, badge row) | `HUG` — `primaryAxisSizingMode = "AUTO"` (nếu layoutMode HORIZONTAL) hoặc `counterAxisSizingMode = "AUTO"` (nếu layoutMode VERTICAL) |
+| `width/height: "FILL"` | `parent.appendChild(f); f.layoutSizingHorizontal/Vertical = "FILL"` |
+| `width/height: "FIXED"` | set sizing modes → `resize(w, h)` → append |
+| `width/height: "HUG"` | `primaryAxisSizingMode = "AUTO"` (set SAU `resize()`) |
 
-**Height:**
-| Frame | Mode |
-|---|---|
-| Screen gốc, sidebar | `FIXED` |
-| Frame chứa danh sách item dọc (section, card, panel) | `HUG` — `primaryAxisSizingMode = "AUTO"` (khi layoutMode VERTICAL) |
-| Frame chiếm phần còn lại chiều dọc | `FILL` — `frame.layoutSizingVertical = "FILL"` |
+**Thứ tự bắt buộc cho mọi frame:**
+1. `layoutMode` — set đầu tiên
+2. `counterAxisSizingMode = "FIXED"` nếu chiều đó FIXED
+3. `resize(w, h)` — sau layoutMode và trước AUTO
+4. `primaryAxisSizingMode = "AUTO"` nếu HUG — **bắt buộc set SAU `resize()`**, vì `resize()` reset mode về FIXED
+5. `parent.appendChild(frame)`
+6. `layoutSizingHorizontal/Vertical = "FILL"` nếu FILL — **bắt buộc set SAU `appendChild`**
 
-> **Nguyên tắc**: chỉ `resize()` khi thực sự FIXED. Nếu content xác định kích thước → HUG. Nếu parent xác định → FILL. KHÔNG hardcode `resize()` rồi để auto-layout engine conflict.
->
-> **Thứ tự set sizing**: luôn `appendChild` vào parent TRƯỚC, rồi mới set `layoutSizingHorizontal/Vertical = "FILL"` — Figma cần biết parent context trước khi tính FILL.
->
-> **DS component instances**: mọi instance nằm trong VERTICAL parent cần fill chiều ngang phải set `inst.layoutSizingHorizontal = "FILL"` sau khi tạo — DS component mặc định HUG width, không tự FILL.
+> **DS instances** mặc định HUG width → dùng `{ fillWidth: true }` trong `addComponent` khi instance nằm trong VERTICAL parent.
 
 ### Gap — giá trị theo context
 
