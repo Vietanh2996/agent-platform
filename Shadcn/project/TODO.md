@@ -20,7 +20,18 @@
   - Registry `ds/snowflake-components.json` — lưu spec custom components tái sử dụng (vd: Sidebar)
   - UI Composer reference `snowflake:ComponentName` thay vì spec lại từ đầu
   - Figma Writer render từ snowflake spec + wrap thành Figma component
+  - Quản lý vòng đời: ai tạo, ai update, khi nào promote từ inline → snowflake
   - Quyết định: cùng file hay file riêng trong Figma?
+
+- [ ] **Flow mode — tạo hàng loạt UI + nối screens**
+  - Nhận danh sách screens trong 1 lần chạy → generate tuần tự
+  - Dùng Figma connector API nối frames thành user flow hoàn chỉnh
+  - Layout tự động: screens xếp theo hàng ngang, arrow có label (action/event)
+
+- [ ] **Batch feedback — sửa hàng loạt theo feedback**
+  - Nhận feedback dạng text → xác định screen + element bị ảnh hưởng
+  - Re-run chỉ phần thay đổi (findOrCreateFrame để không tạo duplicate)
+  - Áp dụng feedback thành rule vào skill file tương ứng nếu mang tính tổng quát
 
 ## Backlog / Future
 
