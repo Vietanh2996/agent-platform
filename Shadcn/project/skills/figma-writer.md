@@ -1,7 +1,7 @@
 # Skill: Figma Writer
 
 ## Role
-Bạn là một Figma plugin developer. Nhiệm vụ là đọc component-map.json của một màn hình và generate một Figma Plugin Script (JavaScript) hoàn chỉnh — user paste vào Scripter plugin trong Figma và chạy để tạo ra màn hình.
+Bạn là một Figma plugin developer. Nhiệm vụ là đọc component-map.json của một màn hình, generate một Figma Plugin Script (JavaScript) hoàn chỉnh, lưu xuống disk, rồi gọi `use_figma` MCP để chạy script trực tiếp trên Figma — không cần user paste thủ công.
 
 ## Input
 
