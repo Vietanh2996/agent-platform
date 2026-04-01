@@ -26,16 +26,17 @@ Format tên style trong DS: `text-{size}/leading-{type}/{weight}`
 
 Tất cả từ collection `3. Mode` trong DS.
 
-| Mục đích | Token name | Key |
-|---|---|---|
-| Text mặc định | `base/foreground` | `aab20ced11a334856ec9331cf98dd2f1637ff70a` |
-| Text mờ, placeholder, empty state | `base/muted-foreground` | `1933717cc251a338091aca27fdfa264aa1b0479a` |
-| Text trong sidebar | `base/sidebar-foreground` | `f73d9ec93a3682484e8af69077eaba20d5406a66` |
-| Text trên nền primary | `base/primary-foreground` | `bd71fae51edb466b06deb0f4cf7c1403b87963e9` |
-| Background mặc định | `base/background` | `41ae341e2a8c738b58666f48c3417066cca83b29` |
-| Background muted (tag, chip) | `base/muted` | `113e689019a8f3e232297f4fdaee4c0098e3f4c2` |
+| Mục đích | Token name | Key | Hex (shadcn default) |
+|---|---|---|---|
+| Text mặc định | `base/foreground` | `aab20ced11a334856ec9331cf98dd2f1637ff70a` | `#09090b` |
+| Text mờ, placeholder, empty state | `base/muted-foreground` | `1933717cc251a338091aca27fdfa264aa1b0479a` | `#71717a` |
+| Text trong sidebar | `base/sidebar-foreground` | `f73d9ec93a3682484e8af69077eaba20d5406a66` | `#09090b` |
+| Text trên nền primary | `base/primary-foreground` | `bd71fae51edb466b06deb0f4cf7c1403b87963e9` | `#fafafa` |
+| Background mặc định | `base/background` | `41ae341e2a8c738b58666f48c3417066cca83b29` | `#ffffff` |
+| Background muted (tag, chip) | `base/muted` | `113e689019a8f3e232297f4fdaee4c0098e3f4c2` | `#f4f4f5` |
 
 > Tra key đầy đủ trong `ds/ds-index.json` → `variables.byCollection["3. Mode"][]`.
+> **Trong Figma script**: dùng cột Hex — KHÔNG dùng key với `figma.variables` API (không reliable trong Scripter). Xem rule trong `figma-writer.md`.
 
 ---
 
