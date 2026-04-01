@@ -25,4 +25,3 @@
 ## Backlog / Future
 
 - [ ] **Text override** trong component instances chưa test đầy đủ (nav item labels vẫn là default DS)
-- [ ] **Bridge plugin** — real-time Claude ↔ Figma (hiện tại dùng use_figma MCP thay thế)
