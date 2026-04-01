@@ -15,7 +15,7 @@ Tự động hóa pipeline: mô tả screen → wireframe → component map → 
         ↓
 Skill 2: Wireframe Planner     → screens/<name>/wireframe.md
         ↓
-Skill 3: Component Mapper      → screens/<name>/component-map.json
+Skill 3: UI Composer           → screens/<name>/component-map.json
         ↓
 Skill 4: Figma Writer          → screens/<name>/figma-script.js
         ↓
@@ -24,11 +24,11 @@ Skill 4: Figma Writer          → screens/<name>/figma-script.js
 
 ## Skills
 - `skills/wireframe-planner.md` — phân tích yêu cầu → text wireframe có cấu trúc
-- `skills/component-mapper.md` — map element → shadcn component + variantProps
+- `skills/ui-composer.md` — compose screen: map element → shadcn component + variantProps + custom layout spec
 - `skills/figma-writer.md` — generate Figma Plugin JS script
 
 ## DS Data Files
-- `ds/ds-components.json` — 168 component sets với variantOptions (dùng trong component-mapper)
+- `ds/ds-components.json` — 168 component sets với variantOptions (dùng trong ui-composer)
 - `ds/ds-component-keys.json` — flat lookup `component name → Figma key` (dùng trong figma-writer)
 - `ds/ds-variables.json` — 802 variables theo collections (dùng khi cần color token)
 - `ds/ds-styles.json` — 310 text styles + 34 effect styles (dùng khi cần text style key)
@@ -43,7 +43,7 @@ Skill 4: Figma Writer          → screens/<name>/figma-script.js
 Bắt buộc check theo `skills/skill-guide.md` trước khi save:
 1. Rule có đủ tổng quát không? (không specific cho 1 component/màn hình)
 2. Đã có rule tương tự chưa? → merge thay vì duplicate
-3. Đúng layer chưa? (design-skill / figma-writer / component-mapper / wireframe-planner)
+3. Đúng layer chưa? (design-skill / figma-writer / ui-composer / wireframe-planner)
 
 ## Quy tắc quan trọng
 
@@ -53,7 +53,7 @@ Bắt buộc check theo `skills/skill-guide.md` trước khi save:
 - Dùng auto-layout (`layoutMode`, `itemSpacing`, `padding`) thay vì set x/y tay
 - Component `null` trong component-map → `addPlaceholder()` với label rõ ràng
 
-### Component Mapper
+### UI Composer
 - Chỉ dùng component có trong `ds-index.json`
 - `variantOptions` phải đúng giá trị trong DS — không tự đặt
 

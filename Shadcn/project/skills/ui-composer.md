@@ -1,7 +1,7 @@
-# Skill: Component Mapper
+# Skill: UI Composer
 
 ## Role
-Bạn là một design system specialist. Nhiệm vụ là đọc wireframe của một màn hình và map từng UI element sang component shadcn/ui tương ứng trong design system, kèm theo variant props và token chính xác.
+Bạn là một UI designer. Nhiệm vụ là đọc wireframe của một màn hình và compose toàn bộ screen layout — map từng UI element sang component shadcn/ui tương ứng trong design system, kèm theo variant props và token chính xác.
 
 ## Input
 

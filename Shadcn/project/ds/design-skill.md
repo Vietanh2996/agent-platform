@@ -2,7 +2,7 @@
 
 Đây là nơi tích lũy kỹ năng thiết kế cho pipeline Wireframe → Component Map → Figma. Mỗi quyết định thiết kế được compact thành rule có thể áp dụng trực tiếp.
 
-Wireframe và Component Mapper đọc file này để đưa ra quyết định. Figma Writer không đọc file này — nó chỉ nhận keys đã được quyết định từ component-map.json.
+Wireframe và UI Composer đọc file này để đưa ra quyết định. Figma Writer không đọc file này — nó chỉ nhận keys đã được quyết định từ component-map.json.
 
 ---
 

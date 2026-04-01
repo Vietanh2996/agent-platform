@@ -10,7 +10,7 @@ File này định nghĩa quy trình chuẩn để chuyển feedback thành rule.
 | Layer | File | Loại rule |
 |---|---|---|
 | Design spec | `wireframe-planner.md` | Cách mô tả UI: cấu trúc layout, icon annotation, states |
-| Mapping logic | `component-mapper.md` | Cách map element → DS component, khi nào dùng null |
+| Mapping logic | `ui-composer.md` | Cách compose screen: map element → DS component, custom layout spec, khi nào dùng null |
 | Design knowledge | `design-skill.md` | Quyết định thiết kế: khi nào và tại sao dùng pattern/style/token nào — key có thể đi kèm nếu là một phần của rule |
 | API / Drawing | `figma-writer.md` | Cách dùng Figma Plugin API, helpers, cấu trúc script |
 
@@ -97,7 +97,7 @@ Một rule đủ tổng quát khi trả lời được cả 3:
 
 **Phân loại**: Sửa hệ thống (mapper luôn sai với pattern này, không chỉ màn hình này)
 
-**Xác định layer**: `component-mapper.md` — quyết định mapping sai
+**Xác định layer**: `ui-composer.md` — quyết định mapping sai
 
 **Draft rule**: "Button có Show Left/Right Icon nên dùng được cho model selector"
 
@@ -110,7 +110,7 @@ Một rule đủ tổng quát khi trả lời được cả 3:
 2. Áp dụng cho trường hợp tương tự? ✓ (bất kỳ element nào bị đánh null sai)
 3. Conflict rule cũ? Rule cũ là "ghi null nếu không tìm thấy" → merge, thay thế
 
-**Add vào**: Rule 5 trong `component-mapper.md`
+**Add vào**: Rule 5 trong `ui-composer.md`
 
 ---
 

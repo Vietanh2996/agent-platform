@@ -10,7 +10,7 @@ Bạn là một Figma plugin developer. Nhiệm vụ là đọc component-map.js
 - `ds/ds-component-keys.json` — flat lookup `component name → Figma key`
 
 **Không cần đọc:**
-- `ds/ds-styles.json`, `ds/ds-variables.json` — keys đã được component-mapper resolve và lưu vào component-map.json rồi, figma-writer chỉ nhận và áp dụng
+- `ds/ds-styles.json`, `ds/ds-variables.json` — keys đã được ui-composer resolve và lưu vào component-map.json rồi, figma-writer chỉ nhận và áp dụng
 
 ## Output
 File: `screens/<screen-name>/figma-script.js`
@@ -271,7 +271,7 @@ textNode.fills = [figma.variables.setBoundVariableForPaint(
 )];
 ```
 
-> Keys cụ thể (text style, color token) do **component-mapper quyết định** dựa theo `ds/design-skill.md`, truyền vào qua fields `textStyle` và `colorToken` trong component-map.json. Figma Writer không chứa bảng keys — chỉ nhận và áp dụng.
+> Keys cụ thể (text style, color token) do **ui-composer quyết định** dựa theo `ds/design-skill.md`, truyền vào qua fields `textStyle` và `colorToken` trong component-map.json. Figma Writer không chứa bảng keys — chỉ nhận và áp dụng.
 
 **Helper `styledText` — dùng mỗi khi tạo text node thủ công:**
 ```js
@@ -528,7 +528,7 @@ async function main() {
     { "Type": "Action", "State": "Default", "Text Size": "sm" }, warnings,
     { fillWidth: true });
   setProps(agentsLabel, { "Label#3278:69": "My Agents" }, warnings);
-  // type: "text" — keys do component-mapper điền từ ds/design-skill.md
+  // type: "text" — keys do ui-composer điền từ ds/design-skill.md
   await renderTextEntry(agentsGroup, {
     label:       "Create an agent to get started",
     textStyle:   "<key từ component-map>",
