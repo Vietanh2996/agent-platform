@@ -62,9 +62,11 @@ const NAV_BOTTOM = [
 // (logProps sẽ log thêm nếu cần)
 
 async function main() {
+  console.log("**  1: start");
   await figma.loadFontAsync({ family: "Inter", style: "Regular" });
   await figma.loadFontAsync({ family: "Inter", style: "Medium" });
   await figma.loadFontAsync({ family: "Inter", style: "Semi Bold" });
+  console.log("**  2: fonts loaded");
 
   const warnings = [];
 
@@ -74,6 +76,7 @@ async function main() {
     try { icons[name] = await figma.importComponentByKeyAsync(key); }
     catch (e) { console.warn("Icon import fail:", name); }
   }
+  console.log("**  3: icons loaded");
 
   // ── Root frame ─────────────────────────────────────────────────
   const root = figma.createFrame();
@@ -117,6 +120,7 @@ async function main() {
   const trigger = await addComponent(headerRow, KEYS.sidebarPopoverTrigger, { "State": "Default" }, warnings);
   overrideFirstText(trigger, "Fleet", warnings);
   await addComponent(headerRow, KEYS.sidebarHeaderBtn, { "State": "Default" }, warnings);
+  console.log("**  4: sidebar header done");
 
   addDivider(sidebar);
 
@@ -143,11 +147,13 @@ async function main() {
   fillH(agentsLabel);
   setProps(agentsLabel, { "Label#3278:69": "My Agents" }, warnings);
 
+  console.log("**  5: top nav done");
   await renderTextEntry(agentsGroup, {
     label:      "Create an agent to get started",
     textStyle:  TEXT_STYLES.smNormal,
     colorToken: COLOR_VARS.mutedForeground,
   });
+  console.log("**  6: my agents done");
 
   addDivider(sidebar);
 
@@ -166,6 +172,7 @@ async function main() {
     await swapIcon(inst, "Icon Name#3278:95", item.icon, icons, warnings);
   }
 
+  console.log("**  7: explore done");
   addDivider(sidebar);
 
   // Bottom nav: Documentation, Settings
@@ -194,8 +201,10 @@ async function main() {
   userBlock.fills = [];
   sidebar.appendChild(userBlock);
 
+  console.log("**  8: bottom nav done");
   const avatarInst = await addComponent(userBlock, KEYS.avatar, { "Type": "Fallback", "Size": "8 (32px)" }, warnings);
   setProps(avatarInst, { "Fallback Text#17100:44": "VA" }, warnings);
+  console.log("**  9: avatar done");
 
   const emailText = await styledText(
     "vietanh.ngx29@gmail.com",
@@ -204,6 +213,7 @@ async function main() {
   );
   emailText.name = "Email";
   userBlock.appendChild(emailText);
+  console.log("**  10: user block done");
 
   // ── MAIN CONTENT ───────────────────────────────────────────────
   const mainFrame = figma.createFrame();
@@ -230,10 +240,12 @@ async function main() {
   centerPanel.fills = [];
   mainFrame.appendChild(centerPanel);
 
+  console.log("**  11: main frame done");
   // "Ask anything" heading
   const heading = await styledText("Ask anything", TEXT_STYLES.xlSemibold, COLOR_VARS.foreground);
   heading.name = "Heading";
   centerPanel.appendChild(heading);
+  console.log("**  12: heading done");
 
   // Tool selector row (8 placeholder buttons)
   const toolRow = figma.createFrame();
@@ -280,6 +292,7 @@ async function main() {
   inputCard.strokes = [{ type: "SOLID", color: hexToRgb("#e5e7eb") }];
   inputCard.strokeWeight = 1;
   centerPanel.appendChild(inputCard);
+  console.log("**  13: tool row + input card done");
 
   // Textarea
   const textareaInst = await addComponent(inputCard, KEYS.textarea, { "State": "Default" }, warnings);
@@ -303,6 +316,7 @@ async function main() {
   toolbar.fills = [];
   inputCard.appendChild(toolbar);
   toolbar.layoutSizingHorizontal = "FILL";  // FILL chiều ngang trong inputCard
+  console.log("**  14: textarea + toolbar done");
 
   // Left group: attach + model selector
   const toolbarLeft = figma.createFrame();
@@ -353,6 +367,7 @@ async function main() {
     "Show Left Icon#37:11": true,
     "Left Icon#46:0":       icons["ArrowUp"]?.id,
   }, warnings);
+  console.log("**  15: toolbar buttons done");
 
   // ── Done ────────────────────────────────────────────────────────
   figma.viewport.scrollAndZoomIntoView([root]);
