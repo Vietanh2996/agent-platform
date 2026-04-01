@@ -240,33 +240,40 @@ function overrideFirstText(inst, newText, warnings = []) {
 ```
 
 ### 8. Styling non-component text layers với DS tokens
-Mọi text node tạo thủ công (empty state, label, heading...) phải bind DS text style + dùng hex color thay vì hardcode `fontSize`.
+Mọi text node tạo thủ công (empty state, label, heading...) phải bind DS text style + color variable thay vì hardcode `fontSize`/`fills`.
 
-> **`figma.variables.importVariableByKeyAsync` KHÔNG dùng trong Scripter** — API này có thể trả về `undefined` thay vì Promise trong Scripter plugin context, gây crash "cannot read property 'then' of undefined". Dùng hex color trực tiếp thay thế. Color token keys trong `ds/design-skill.md` chỉ dùng để biết semantic → map sang hex tương ứng khi generate script.
-
-**Hex map chuẩn cho shadcn/ui default theme:**
+**Figma Plugin API:**
 ```js
-const COLOR_HEX = {
-  foreground:        "#09090b", // zinc-950
-  mutedForeground:   "#71717a", // zinc-500
-  sidebarForeground: "#09090b", // same as foreground
-  primaryForeground: "#fafafa", // zinc-50 (text on primary bg)
-  background:        "#ffffff",
-  muted:             "#f4f4f5", // zinc-100
-};
+// Bind text style
+const textStyle = await figma.importStyleByKeyAsync(textStyleKey);
+textNode.textStyleId = textStyle.id;
+
+// Bind color variable
+const colorVar = await figma.variables.importVariableByKeyAsync(colorVarKey);
+textNode.fills = [figma.variables.setBoundVariableForPaint(
+  { type: "SOLID", color: { r: 0, g: 0, b: 0 } },
+  "color",
+  colorVar
+)];
 ```
+
+> Keys cụ thể (text style, color token) do **component-mapper quyết định** dựa theo `ds/design-skill.md`, truyền vào qua fields `textStyle` và `colorToken` trong component-map.json. Figma Writer không chứa bảng keys — chỉ nhận và áp dụng.
 
 **Helper `styledText` — dùng mỗi khi tạo text node thủ công:**
 ```js
-// colorHex: hex string — KHÔNG dùng figma.variables API
-async function styledText(characters, textStyleKey, colorHex = "#000000") {
+async function styledText(characters, textStyleKey, colorVarKey) {
   const t = figma.createText();
   t.characters = characters;
   try {
     const style = await figma.importStyleByKeyAsync(textStyleKey);
     t.textStyleId = style.id;
   } catch (e) { console.warn("Text style import fail:", textStyleKey); }
-  t.fills = [{ type: "SOLID", color: hexToRgb(colorHex) }];
+  try {
+    const v = await figma.variables.importVariableByKeyAsync(colorVarKey);
+    t.fills = [figma.variables.setBoundVariableForPaint(
+      { type: "SOLID", color: { r: 0, g: 0, b: 0 } }, "color", v
+    )];
+  } catch (e) { console.warn("Color var import fail:", colorVarKey); }
   return t;
 }
 ```

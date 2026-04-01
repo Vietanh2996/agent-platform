@@ -34,11 +34,10 @@ const TEXT_STYLES = {
   smNormal:   "18bc7e1f33b627174309265d7e1c046264cf16bf", // text-sm/leading-normal/normal
   xlSemibold: "144b63084c8a3d11f60b04ec2d2279276b8044a7", // text-xl/leading-normal/semibold
 };
-// Hex colors (figma.variables API không reliable trong Scripter — dùng hex thay variable keys)
-const COLOR_HEX = {
-  foreground:        "#09090b", // zinc-950
-  mutedForeground:   "#71717a", // zinc-500
-  sidebarForeground: "#09090b", // same as foreground
+const COLOR_VARS = {
+  foreground:        "aab20ced11a334856ec9331cf98dd2f1637ff70a",
+  mutedForeground:   "1933717cc251a338091aca27fdfa264aa1b0479a",
+  sidebarForeground: "f73d9ec93a3682484e8af69077eaba20d5406a66",
 };
 
 // ── Nav config ────────────────────────────────────────────────────
@@ -147,7 +146,7 @@ async function main() {
   await renderTextEntry(agentsGroup, {
     label:      "Create an agent to get started",
     textStyle:  TEXT_STYLES.smNormal,
-    colorToken: COLOR_HEX.mutedForeground,
+    colorToken: COLOR_VARS.mutedForeground,
   });
 
   addDivider(sidebar);
@@ -201,7 +200,7 @@ async function main() {
   const emailText = await styledText(
     "vietanh.ngx29@gmail.com",
     TEXT_STYLES.smNormal,
-    COLOR_HEX.sidebarForeground
+    COLOR_VARS.sidebarForeground
   );
   emailText.name = "Email";
   userBlock.appendChild(emailText);
@@ -232,7 +231,7 @@ async function main() {
   mainFrame.appendChild(centerPanel);
 
   // "Ask anything" heading
-  const heading = await styledText("Ask anything", TEXT_STYLES.xlSemibold, COLOR_HEX.foreground);
+  const heading = await styledText("Ask anything", TEXT_STYLES.xlSemibold, COLOR_VARS.foreground);
   heading.name = "Heading";
   centerPanel.appendChild(heading);
 
@@ -462,15 +461,19 @@ function addPlaceholder(parent, wireframeRef, { width = 120, height = 48 } = {})
   return frame;
 }
 
-// colorHex: hex string (e.g. "#09090b") — không dùng figma.variables API (không reliable trong Scripter)
-async function styledText(characters, textStyleKey, colorHex = "#000000") {
+async function styledText(characters, textStyleKey, colorVarKey) {
   const t = figma.createText();
   t.characters = characters;
   try {
     const style = await figma.importStyleByKeyAsync(textStyleKey);
     t.textStyleId = style.id;
   } catch (e) { console.warn("Text style import fail:", textStyleKey); }
-  t.fills = [{ type: "SOLID", color: hexToRgb(colorHex) }];
+  try {
+    const v = await figma.variables.importVariableByKeyAsync(colorVarKey);
+    t.fills = [figma.variables.setBoundVariableForPaint(
+      { type: "SOLID", color: { r: 0, g: 0, b: 0 } }, "color", v
+    )];
+  } catch (e) { console.warn("Color var import fail:", colorVarKey); }
   return t;
 }
 
