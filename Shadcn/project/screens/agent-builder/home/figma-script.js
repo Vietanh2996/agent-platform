@@ -214,9 +214,9 @@ async function main() {
   mainFrame.fills = [{ type: "SOLID", color: hexToRgb("#ffffff") }];
   root.appendChild(mainFrame);
   // Set sau appendChild để parent context đã sẵn sàng
-  // KHÔNG gọi resize() sau khi set FILL — resize() sẽ reset sizing về FIXED
   mainFrame.layoutSizingHorizontal = "FILL"; // FILL chiều ngang — chiếm phần còn lại sau sidebar
-  mainFrame.layoutSizingVertical   = "FILL"; // FILL chiều dọc — root fixed 900px nên sẽ đúng
+  mainFrame.layoutSizingVertical   = "FIXED"; // FIXED chiều dọc
+  mainFrame.resize(mainFrame.width, 900);
 
   // Center panel — HUG height (wrap content), FIXED width 640
   const centerPanel = figma.createFrame();
