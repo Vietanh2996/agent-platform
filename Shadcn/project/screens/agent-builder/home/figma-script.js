@@ -2,6 +2,7 @@
 // Figma Plugin Script — paste vào Scripter và Run
 // DS: shadcn/ui | File: LiAE855pzu8Abe1z0BokO7
 
+console.log("** TOP LEVEL — script parsed OK");
 // ── Component set keys (ds-keys.json) ────────────────────────────
 const KEYS = {
   sidebarPopoverTrigger: "5c3305b6fa553b99f43236a0e43a8895b216149a",
@@ -333,7 +334,7 @@ async function main() {
   const attachBtn = await addComponent(toolbarLeft, KEYS.button, { "Variant": "Ghost", "Size": "icon" }, warnings);
   setProps(attachBtn, {
     "Show Left Icon#37:11": true,
-    "Left Icon#46:0":       icons["Plus"]?.id,
+    "Left Icon#46:0":       icons["Plus"] && icons["Plus"].id,
   }, warnings);
   // Model selector: Ghost button + text + chevron right
   const modelBtn = await addComponent(toolbarLeft, KEYS.button,
@@ -342,7 +343,7 @@ async function main() {
     "Button Text#37:10":    "Sonnet 4.6",
     "Show Left Icon#37:11": false,
     "Show Right Icon#267:0": true,
-    "Right Icon#267:65":    icons["ChevronDown"]?.id,
+    "Right Icon#267:65":    icons["ChevronDown"] && icons["ChevronDown"].id,
   }, warnings);
 
   // Right group: mic + send
@@ -359,13 +360,13 @@ async function main() {
   const micBtn = await addComponent(toolbarRight, KEYS.button, { "Variant": "Ghost",   "Size": "icon" }, warnings);
   setProps(micBtn, {
     "Show Left Icon#37:11": true,
-    "Left Icon#46:0":       icons["Mic"]?.id,
+    "Left Icon#46:0":       icons["Mic"] && icons["Mic"].id,
   }, warnings);
 
   const sendBtn = await addComponent(toolbarRight, KEYS.button, { "Variant": "Default", "Size": "icon" }, warnings);
   setProps(sendBtn, {
     "Show Left Icon#37:11": true,
-    "Left Icon#46:0":       icons["ArrowUp"]?.id,
+    "Left Icon#46:0":       icons["ArrowUp"] && icons["ArrowUp"].id,
   }, warnings);
   console.log("**  15: toolbar buttons done");
 
