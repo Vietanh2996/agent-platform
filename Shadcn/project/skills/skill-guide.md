@@ -47,7 +47,11 @@ Feedback từ output thực tế
 4. Nếu đã có rule gần: merge hoặc thay thế — không duplicate
         ↓
 5. Add vào file đúng layer
+        ↓
+6. Check lại với skill-guide: rule có đủ tổng quát không? có duplicate không?
 ```
+
+> **Bước 6 là bắt buộc** — không skip dù rule có vẻ rõ ràng.
 
 ---
 

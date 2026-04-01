@@ -18,6 +18,15 @@ File: `screens/<screen-name>/wireframe.md`
 4. **Ghi rõ data** nếu có: loại dữ liệu hiển thị, số lượng ước tính
 5. **Ghi interaction** quan trọng: click dẫn đến đâu, trigger gì
 6. **Ghi icon name cho mọi element có icon** — dùng tên Lucide chính xác (PascalCase), tra tại https://lucide.dev. Ghi trong ngoặc vuông: `[icon: IconName]`. Đây là nơi duy nhất quyết định icon nào dùng cho element nào.
+7. **Ghi rõ sizing intent** cho mỗi Section và Block quan trọng — dùng annotation trong ngoặc vuông ngay sau tên Section/Block:
+   - `[fills remaining width]` — chiều rộng fill hết phần còn lại của parent
+   - `[fills remaining height]` — chiều cao fill hết phần còn lại của parent
+   - `[fills remaining space]` — cả width lẫn height đều fill
+   - `[fixed Xpx]` — kích thước cố định X pixel (ghi rõ width hay height nếu chỉ một chiều)
+   - `[hug content]` — kích thước bao quanh nội dung bên trong
+   - `[centered]` — block được căn giữa trong parent (cả ngang lẫn dọc trừ khi ghi rõ hơn)
+
+   **Quy tắc áp dụng**: Mỗi Section bắt buộc có sizing annotation. Block quan trọng (panel, container, card) nên có nếu sizing không hiển nhiên từ context.
 
 ## Output Format
 
@@ -34,7 +43,7 @@ File: `screens/<screen-name>/wireframe.md`
 
 ## Sections
 
-### <Tên Section>
+### <Tên Section> [<sizing annotation>]
 **Vị trí**: <top | left | right | main | bottom | modal | drawer>
 **Mục đích**: <1 câu>
 
@@ -83,7 +92,7 @@ File: `screens/<screen-name>/wireframe.md`
 
 ## Sections
 
-### Sidebar
+### Sidebar [fixed 240px width, fills remaining height]
 **Vị trí**: left, fixed, width ~240px
 **Mục đích**: Navigation chính của app
 
@@ -97,7 +106,7 @@ File: `screens/<screen-name>/wireframe.md`
   - Avatar + tên user + role
   - Dropdown: Profile, Logout
 
-### Header
+### Header [fills remaining width, hug content height]
 **Vị trí**: top, sticky
 **Mục đích**: Context + quick actions
 
@@ -107,7 +116,7 @@ File: `screens/<screen-name>/wireframe.md`
   - Date range picker: filter toàn trang theo khoảng thời gian [default: 30 ngày]
   - Nút export: export data ra CSV
 
-### KPI Cards
+### KPI Cards [fills remaining width, hug content height]
 **Vị trí**: main, top row
 **Mục đích**: Snapshot 4 chỉ số chính
 
@@ -121,7 +130,7 @@ File: `screens/<screen-name>/wireframe.md`
 - **Card: Tỉ lệ chuyển đổi**
   - Label, %, badge trend
 
-### Revenue Chart
+### Revenue Chart [fills remaining space]
 **Vị trí**: main, bottom-left (~60% width)
 **Mục đích**: Xu hướng doanh thu theo ngày
 
@@ -135,7 +144,7 @@ File: `screens/<screen-name>/wireframe.md`
   - [state loading: skeleton]
   - [state empty: "Chưa có dữ liệu"]
 
-### Recent Orders Table
+### Recent Orders Table [fills remaining space]
 **Vị trí**: main, bottom-right (~40% width)
 **Mục đích**: Danh sách đơn hàng gần nhất
 

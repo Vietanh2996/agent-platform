@@ -1,37 +1,33 @@
 {
-  "screen": "agent-builder-home",
+  "screen": "agent-builder/home",
   "generatedAt": "2026-04-01",
   "layout": "sidebar-left",
   "sections": [
     {
       "name": "Sidebar",
       "position": "left",
+      "sizing": { "width": "FIXED", "widthValue": 260, "height": "FILL" },
       "components": [
         {
-          "id": "sidebar-popover-trigger",
-          "wireframe_ref": "Sidebar > Header row > App name",
+          "id": "sidebar-header-trigger",
+          "wireframe_ref": "Sidebar > Header row > App name dropdown",
           "component": "Sidebar / PopoverTrigger",
           "label": "Fleet",
           "iconName": null,
           "badge": null,
           "variantProps": { "State": "Default" },
-          "stateVariants": {},
           "tokens": {},
-          "repeat": "",
-          "notes": "Text override: 'Fleet'"
+          "notes": "App name + workspace dropdown"
         },
         {
           "id": "sidebar-header-btn",
           "wireframe_ref": "Sidebar > Header row > Collapse toggle",
           "component": "Sidebar / Header Button",
-          "label": "",
-          "iconName": "PanelLeft",
+          "label": null,
+          "iconName": null,
           "badge": null,
           "variantProps": { "State": "Default" },
-          "stateVariants": {},
-          "tokens": {},
-          "repeat": "",
-          "notes": "Toggle sidebar icon"
+          "tokens": {}
         },
         {
           "id": "nav-chat",
@@ -41,10 +37,7 @@
           "iconName": "MessageSquare",
           "badge": "3",
           "variantProps": { "Type": "Badge", "State": "Default", "Collapsed": "False" },
-          "stateVariants": { "hover": { "State": "Hover" } },
-          "tokens": {},
-          "repeat": "",
-          "notes": ""
+          "tokens": {}
         },
         {
           "id": "nav-inbox",
@@ -54,27 +47,21 @@
           "iconName": "Inbox",
           "badge": "3",
           "variantProps": { "Type": "Badge", "State": "Active", "Collapsed": "False" },
-          "stateVariants": {},
-          "tokens": {},
-          "repeat": "",
-          "notes": ""
+          "tokens": {}
         },
         {
-          "id": "label-my-agents",
-          "wireframe_ref": "Sidebar > My Agents section > Label",
+          "id": "my-agents-label",
+          "wireframe_ref": "Sidebar > My Agents > Label",
           "component": "Sidebar / SidebarGroupLabel",
           "label": "My Agents",
           "iconName": null,
           "badge": null,
           "variantProps": { "Type": "Action", "State": "Default", "Text Size": "sm" },
-          "stateVariants": {},
-          "tokens": {},
-          "repeat": "",
-          "notes": "Action buttons: Plus + ChevronDown"
+          "tokens": {}
         },
         {
           "id": "my-agents-empty",
-          "wireframe_ref": "Sidebar > My Agents section > Empty state",
+          "wireframe_ref": "Sidebar > My Agents > Empty state",
           "component": null,
           "type": "text",
           "label": "Create an agent to get started",
@@ -83,88 +70,68 @@
           "textStyle": "18bc7e1f33b627174309265d7e1c046264cf16bf",
           "colorToken": "1933717cc251a338091aca27fdfa264aa1b0479a",
           "variantProps": {},
-          "stateVariants": {},
           "tokens": {},
-          "repeat": "",
           "notes": "text-sm/normal + muted-foreground"
         },
         {
-          "id": "label-explore",
-          "wireframe_ref": "Sidebar > Explore section > Label",
+          "id": "explore-label",
+          "wireframe_ref": "Sidebar > Explore > Label",
           "component": "Sidebar / SidebarGroupLabel",
           "label": "Explore",
           "iconName": null,
           "badge": null,
           "variantProps": { "Type": "Default", "State": "Default", "Text Size": "sm" },
-          "stateVariants": {},
-          "tokens": {},
-          "repeat": "",
-          "notes": ""
+          "tokens": {}
         },
         {
           "id": "nav-integrations",
-          "wireframe_ref": "Sidebar > Explore section > Integrations",
+          "wireframe_ref": "Sidebar > Explore > Integrations",
           "component": "Sidebar / SidebarMenuButton",
           "label": "Integrations",
           "iconName": "Zap",
           "badge": null,
           "variantProps": { "Type": "Simple", "State": "Default", "Collapsed": "False" },
-          "stateVariants": { "hover": { "State": "Hover" } },
-          "tokens": {},
-          "repeat": "",
-          "notes": ""
+          "tokens": {}
         },
         {
           "id": "nav-skills",
-          "wireframe_ref": "Sidebar > Explore section > Skills",
+          "wireframe_ref": "Sidebar > Explore > Skills",
           "component": "Sidebar / SidebarMenuButton",
           "label": "Skills",
           "iconName": "FileText",
           "badge": null,
           "variantProps": { "Type": "Simple", "State": "Default", "Collapsed": "False" },
-          "stateVariants": { "hover": { "State": "Hover" } },
-          "tokens": {},
-          "repeat": "",
-          "notes": ""
+          "tokens": {}
         },
         {
           "id": "nav-templates",
-          "wireframe_ref": "Sidebar > Explore section > Templates",
+          "wireframe_ref": "Sidebar > Explore > Templates",
           "component": "Sidebar / SidebarMenuButton",
           "label": "Templates",
           "iconName": "Puzzle",
           "badge": null,
           "variantProps": { "Type": "Simple", "State": "Default", "Collapsed": "False" },
-          "stateVariants": { "hover": { "State": "Hover" } },
-          "tokens": {},
-          "repeat": "",
-          "notes": ""
+          "tokens": {}
         },
         {
           "id": "nav-workspace-agents",
-          "wireframe_ref": "Sidebar > Explore section > Workspace Agents",
+          "wireframe_ref": "Sidebar > Explore > Workspace Agents",
           "component": "Sidebar / SidebarMenuButton",
           "label": "Workspace Agents",
           "iconName": "Bot",
           "badge": null,
           "variantProps": { "Type": "Simple", "State": "Default", "Collapsed": "False" },
-          "stateVariants": { "hover": { "State": "Hover" } },
-          "tokens": {},
-          "repeat": "",
-          "notes": ""
+          "tokens": {}
         },
         {
-          "id": "nav-documentation",
+          "id": "nav-docs",
           "wireframe_ref": "Sidebar > Bottom nav > Documentation",
           "component": "Sidebar / SidebarMenuButton",
           "label": "Documentation",
           "iconName": "BookOpen",
           "badge": null,
           "variantProps": { "Type": "Simple", "State": "Default", "Collapsed": "False" },
-          "stateVariants": { "hover": { "State": "Hover" } },
-          "tokens": {},
-          "repeat": "",
-          "notes": ""
+          "tokens": {}
         },
         {
           "id": "nav-settings",
@@ -174,10 +141,7 @@
           "iconName": "Settings",
           "badge": null,
           "variantProps": { "Type": "Simple", "State": "Default", "Collapsed": "False" },
-          "stateVariants": { "hover": { "State": "Hover" } },
-          "tokens": {},
-          "repeat": "",
-          "notes": ""
+          "tokens": {}
         },
         {
           "id": "user-avatar",
@@ -186,11 +150,8 @@
           "label": "VA",
           "iconName": null,
           "badge": null,
-          "variantProps": { "Type": "Fallback", "Size": "8 (32px)" },
-          "stateVariants": {},
-          "tokens": {},
-          "repeat": "",
-          "notes": "Initials fallback"
+          "variantProps": { "Type": "Fallback", "Size": "6 (24px)" },
+          "tokens": {}
         },
         {
           "id": "user-email",
@@ -203,9 +164,7 @@
           "textStyle": "18bc7e1f33b627174309265d7e1c046264cf16bf",
           "colorToken": "f73d9ec93a3682484e8af69077eaba20d5406a66",
           "variantProps": {},
-          "stateVariants": {},
           "tokens": {},
-          "repeat": "",
           "notes": "text-sm/normal + sidebar-foreground"
         }
       ]
@@ -213,7 +172,19 @@
     {
       "name": "Main Content",
       "position": "main",
+      "sizing": { "width": "FILL", "height": "FILL" },
       "components": [
+        {
+          "id": "center-panel",
+          "wireframe_ref": "Main Content > Center panel",
+          "component": null,
+          "type": "layout",
+          "sizing": { "width": "FIXED", "widthValue": 640, "height": "HUG" },
+          "align": { "horizontal": "CENTER", "vertical": "CENTER" },
+          "itemSpacing": 24,
+          "variantProps": {},
+          "tokens": {}
+        },
         {
           "id": "heading-ask-anything",
           "wireframe_ref": "Main Content > Center panel > Heading",
@@ -225,100 +196,139 @@
           "textStyle": "144b63084c8a3d11f60b04ec2d2279276b8044a7",
           "colorToken": "aab20ced11a334856ec9331cf98dd2f1637ff70a",
           "variantProps": {},
-          "stateVariants": {},
           "tokens": {},
-          "repeat": "",
           "notes": "text-xl/leading-normal/semibold + foreground"
         },
         {
-          "id": "tool-selector-row",
-          "wireframe_ref": "Main Content > Center panel > Tool selector row",
+          "id": "tool-google-docs",
+          "wireframe_ref": "Main Content > Center panel > Tool selector > Google Docs",
           "component": null,
-          "label": "Tool selector",
+          "label": "Google Docs",
           "iconName": null,
-          "badge": null,
           "variantProps": {},
-          "stateVariants": {},
           "tokens": {},
-          "repeat": "8 tool icons: Google Docs, Perplexity, Slack, Linear, Notion, Loom, X/Twitter, Gmail",
-          "notes": "Brand icons ngoài DS — placeholder. Mỗi icon 32x32, gap 8, border 1px, bo góc 8"
+          "notes": "Brand icon — awaiting for design"
         },
         {
-          "id": "input-card",
-          "wireframe_ref": "Main Content > Center panel > Chat input card",
+          "id": "tool-perplexity",
+          "wireframe_ref": "Main Content > Center panel > Tool selector > Perplexity",
           "component": null,
-          "label": "Chat input card",
+          "label": "Perplexity",
           "iconName": null,
-          "badge": null,
           "variantProps": {},
-          "stateVariants": {},
           "tokens": {},
-          "repeat": "",
-          "notes": "Custom container: VERTICAL, 640px wide, bo góc 12, border 1px #e5e7eb, padding 12. Chứa Textarea + toolbar"
+          "notes": "Brand icon — awaiting for design"
         },
         {
-          "id": "input-textarea",
-          "wireframe_ref": "Main Content > Chat input card > Textarea",
+          "id": "tool-slack",
+          "wireframe_ref": "Main Content > Center panel > Tool selector > Slack",
+          "component": null,
+          "label": "Slack",
+          "iconName": null,
+          "variantProps": {},
+          "tokens": {},
+          "notes": "Brand icon — awaiting for design"
+        },
+        {
+          "id": "tool-linear",
+          "wireframe_ref": "Main Content > Center panel > Tool selector > Linear",
+          "component": null,
+          "label": "Linear",
+          "iconName": null,
+          "variantProps": {},
+          "tokens": {},
+          "notes": "Brand icon — awaiting for design"
+        },
+        {
+          "id": "tool-notion",
+          "wireframe_ref": "Main Content > Center panel > Tool selector > Notion",
+          "component": null,
+          "label": "Notion",
+          "iconName": null,
+          "variantProps": {},
+          "tokens": {},
+          "notes": "Brand icon — awaiting for design"
+        },
+        {
+          "id": "tool-loom",
+          "wireframe_ref": "Main Content > Center panel > Tool selector > Loom",
+          "component": null,
+          "label": "Loom",
+          "iconName": null,
+          "variantProps": {},
+          "tokens": {},
+          "notes": "Brand icon — awaiting for design"
+        },
+        {
+          "id": "tool-twitter",
+          "wireframe_ref": "Main Content > Center panel > Tool selector > X/Twitter",
+          "component": null,
+          "label": "X/Twitter",
+          "iconName": null,
+          "variantProps": {},
+          "tokens": {},
+          "notes": "Brand icon — awaiting for design"
+        },
+        {
+          "id": "tool-gmail",
+          "wireframe_ref": "Main Content > Center panel > Tool selector > Gmail",
+          "component": null,
+          "label": "Gmail",
+          "iconName": null,
+          "variantProps": {},
+          "tokens": {},
+          "notes": "Brand icon — awaiting for design"
+        },
+        {
+          "id": "chat-textarea",
+          "wireframe_ref": "Main Content > Center panel > Chat input card > Textarea",
           "component": "Textarea",
           "label": "Write your message...",
           "iconName": null,
           "badge": null,
-          "variantProps": { "State": "Default" },
-          "stateVariants": { "focus": { "State": "Focused" } },
-          "tokens": {},
-          "repeat": "",
-          "notes": "Placeholder text: 'Write your message...'"
+          "variantProps": { "State": "Default", "Filled": "False" },
+          "tokens": {}
         },
         {
           "id": "toolbar-attach",
-          "wireframe_ref": "Main Content > Chat input card > Toolbar > Attach button",
+          "wireframe_ref": "Main Content > Center panel > Chat input card > Toolbar > Attach",
           "component": "Button",
-          "label": "",
+          "label": null,
           "iconName": "Plus",
           "badge": null,
-          "variantProps": { "Variant": "Ghost", "Size": "Icon" },
-          "stateVariants": {},
-          "tokens": {},
-          "repeat": "",
-          "notes": "Icon-only ghost button"
+          "variantProps": { "Variant": "Ghost", "Size": "icon-sm", "State": "Default" },
+          "tokens": {}
         },
         {
           "id": "toolbar-model",
-          "wireframe_ref": "Main Content > Chat input card > Toolbar > Model selector",
-          "component": "Button",
+          "wireframe_ref": "Main Content > Center panel > Chat input card > Toolbar > Model selector",
+          "component": "Combobox",
           "label": "Sonnet 4.6",
-          "iconName": "ChevronDown",
+          "iconName": null,
           "badge": null,
-          "variantProps": { "Variant": "Ghost", "Size": "sm", "State": "Default" },
-          "stateVariants": {},
+          "variantProps": { "Filled": "True", "State": "Default" },
           "tokens": {},
-          "repeat": "",
-          "notes": "Button Text: 'Sonnet 4.6', Show Right Icon: true, Right Icon: ChevronDown"
+          "notes": "Model selector, Filled=True shows selected value"
         },
         {
-          "id": "toolbar-mic",
-          "wireframe_ref": "Main Content > Chat input card > Toolbar > Mic button",
+          "id": "toolbar-voice",
+          "wireframe_ref": "Main Content > Center panel > Chat input card > Toolbar > Voice",
           "component": "Button",
-          "label": "",
+          "label": null,
           "iconName": "Mic",
           "badge": null,
-          "variantProps": { "Variant": "Ghost", "Size": "Icon" },
-          "stateVariants": {},
-          "tokens": {},
-          "repeat": "",
-          "notes": "Icon-only ghost button"
+          "variantProps": { "Variant": "Ghost", "Size": "icon", "State": "Default" },
+          "tokens": {}
         },
         {
           "id": "toolbar-send",
-          "wireframe_ref": "Main Content > Chat input card > Toolbar > Send button",
+          "wireframe_ref": "Main Content > Center panel > Chat input card > Toolbar > Send",
           "component": "Button",
-          "label": "",
+          "label": null,
           "iconName": "ArrowUp",
           "badge": null,
-          "variantProps": { "Variant": "Default", "Size": "Icon" },
-          "stateVariants": {},
+          "variantProps": { "Variant": "Default", "Size": "icon", "State": "Default" },
           "tokens": {},
-          "repeat": "",
           "notes": "Primary send button"
         }
       ]
