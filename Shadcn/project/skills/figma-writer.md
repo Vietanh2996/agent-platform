@@ -7,7 +7,7 @@ Bạn là một Figma plugin developer. Nhiệm vụ là đọc component-map.js
 
 **Luôn đọc:**
 - `screens/<screen-name>/component-map.json` — mapping components đã có
-- `ds/ds-component-keys.json` — flat lookup `component name → Figma key`
+- `ds/ds-components.json` — component metadata + keys (flat lookup `component name → Figma key`)
 
 **Không cần đọc:**
 - `ds/ds-styles.json`, `ds/ds-variables.json` — keys đã được ui-composer resolve và lưu vào component-map.json rồi, figma-writer chỉ nhận và áp dụng
@@ -35,7 +35,7 @@ use_figma(
 ## Cách dùng Figma Plugin API đúng
 
 ### 1. Import component từ DS
-Keys trong `ds-keys.json` là **component set keys** → dùng `importComponentSetByKeyAsync`, lấy `defaultVariant`, rồi set variant properties sau:
+Keys trong `ds-components.json` là **component set keys** → dùng `importComponentSetByKeyAsync`, lấy `defaultVariant`, rồi set variant properties sau:
 
 ```js
 const set = await figma.importComponentSetByKeyAsync(key);
@@ -102,7 +102,7 @@ await addComponent(headerRow, KEYS.sidebarHeaderBtn, { "State": "Default" }, war
 ### 1. Cấu trúc script
 ```js
 const KEYS = {
-  // Lấy từ ds-keys.json — component set keys
+  // Lấy từ ds-components.json — component set keys
 };
 
 const ICON_KEYS = {
@@ -440,7 +440,7 @@ function hexToRgb(hex) {
 ## Quy tắc khi generate
 
 1. **Đọc `component-map.json` theo thứ tự sections** — tạo frame theo đúng thứ tự layout
-2. **Tra `ds-keys.json`** để lấy key của từng component, khai báo vào `KEYS` object
+2. **Tra `ds-components.json`** để lấy key của từng component, khai báo vào `KEYS` object
 3. **Variant properties**: lấy từ `variantProps` trong component-map, chỉ set các key có trong `variantOptions` DS
 4. **Text override**: nếu `notes` có "Text: 'XYZ'" → dùng `setProps` với property name đã biết, hoặc `overrideFirstText` nếu chưa biết
 5. **Badge**: nếu `notes` có "Badge number: N" → set `Badge Text#3278:108` với SidebarMenuButton

@@ -28,12 +28,12 @@ use_figma MCP                  → UI xuất hiện trực tiếp trên Figma ca
 - `skills/figma-writer.md` — generate Figma Plugin JS script
 
 ## DS Data Files
-- `ds/ds-components.json` — 168 component sets với variantOptions (dùng trong ui-composer)
-- `ds/ds-component-keys.json` — flat lookup `component name → Figma key` (dùng trong figma-writer)
+- `ds/ds-components.json` — 168 component sets với variantOptions + keys (dùng trong ui-composer & figma-writer)
 - `ds/ds-variables.json` — 802 variables theo collections (dùng khi cần color token)
 - `ds/ds-styles.json` — 310 text styles + 34 effect styles (dùng khi cần text style key)
+- `ds/ds-icon-keys.json` — 1469 Lucide icon mappings (dùng trong figma-writer để icon swap)
 - `ds/ds-index.json` — file gốc đầy đủ (nguồn để regenerate các file trên nếu DS update)
-- `ds/design-decisions.md` — quyết định thiết kế tích lũy theo thời gian
+- `ds/design-skill.md` — quyết định thiết kế + design rules tích lũy theo thời gian
 
 ## Screens đã làm
 - `screens/fleet-sidebar/` — sidebar navigation (tested, working)
