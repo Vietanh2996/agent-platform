@@ -153,10 +153,10 @@ function findOrCreateFrame(name, parent = figma.currentPage) {
 
 ```js
 const rootFrame = findOrCreateFrame("<ScreenName>"); // tìm hoặc tạo mới, không duplicate
-rootFrame.layoutMode = "HORIZONTAL";   // set layoutMode TRƯỚC
-rootFrame.primaryAxisSizingMode = "FIXED"; // lock sizing modes SAU layoutMode
-rootFrame.counterAxisSizingMode = "FIXED"; // ← nếu resize() gọi TRƯỚC layoutMode, Figma reset về AUTO
-rootFrame.resize(1440, 900);               // resize SAU khi modes đã lock
+rootFrame.layoutMode = "HORIZONTAL";        // 1. layoutMode TRƯỚC
+rootFrame.primaryAxisSizingMode = "FIXED"; // 2. lock sizing modes SAU layoutMode
+rootFrame.counterAxisSizingMode = "FIXED";
+rootFrame.resize(1440, 900);               // 3. resize SAU khi modes đã lock
 rootFrame.itemSpacing = 0;
 rootFrame.fills = [{ type: "SOLID", color: hexToRgb("#ffffff") }];
 rootFrame.clipsContent = true;
@@ -396,36 +396,44 @@ function hexToRgb(hex) {
 
 ## Quy tắc Layout & Sizing (API implementation)
 
-> Sizing được đọc từ fields `sizing` và `align` trong component-map — không tự suy ra từ zone rules.
+### Sizing — đọc từ component-map, không tự suy ra
 
-### Cách áp dụng sizing field
+> Quyết định FIXED/FILL/HUG cho từng zone → tra `ds/design-skill.md`. Section này chỉ chứa cách implement đúng bằng API.
 
-| `sizing.width` | Code |
+| `sizing` | Code |
 |---|---|
-| `"FILL"` | `parent.appendChild(frame); frame.layoutSizingHorizontal = "FILL";` |
-| `"FIXED"` | `frame.resize(sizing.widthValue, h)` trước appendChild |
-| `"HUG"` | `frame.counterAxisSizingMode = "AUTO"` (VERTICAL) hoặc `frame.primaryAxisSizingMode = "AUTO"` (HORIZONTAL) |
+| `width/height: "FILL"` | `parent.appendChild(f); f.layoutSizingHorizontal/Vertical = "FILL"` |
+| `width/height: "FIXED"` | set sizing modes → `resize(w, h)` → append |
+| `width/height: "HUG"` | `primaryAxisSizingMode = "AUTO"` (set SAU `resize()`) |
 
-| `sizing.height` | Code |
+**Thứ tự bắt buộc cho mọi frame:**
+1. `layoutMode` — set đầu tiên
+2. `counterAxisSizingMode = "FIXED"` nếu chiều đó FIXED
+3. `resize(w, h)` — sau layoutMode và trước AUTO
+4. `primaryAxisSizingMode = "AUTO"` nếu HUG — **bắt buộc set SAU `resize()`**, vì `resize()` reset mode về FIXED
+5. `parent.appendChild(frame)`
+6. `layoutSizingHorizontal/Vertical = "FILL"` nếu FILL — **bắt buộc set SAU `appendChild`**
+
+> **DS instances** mặc định HUG width → dùng `{ fillWidth: true }` trong `addComponent` khi instance nằm trong VERTICAL parent.
+
+### Gap — giá trị theo context
+
+| Context | `itemSpacing` |
 |---|---|
-| `"FILL"` | `parent.appendChild(frame); frame.layoutSizingVertical = "FILL";` |
-| `"FIXED"` | `frame.resize(w, sizing.heightValue)` |
-| `"HUG"` | `frame.primaryAxisSizingMode = "AUTO"` (VERTICAL) |
+| Nav item list (sidebar menu buttons) | `2` |
+| Toolbar buttons (trái/phải) | `4` |
+| Trong card dọc (vd: textarea + toolbar) | `8` |
+| Center panel — heading, tool row, input card | `24` |
+| Header / divider row | `0` |
 
-| `align` | Code |
+### Padding — giá trị theo context
+
+| Context | Padding |
 |---|---|
-| `horizontal: "CENTER"` | `parent.counterAxisAlignItems = "CENTER"` trên parent |
-| `vertical: "CENTER"` | `parent.primaryAxisAlignItems = "CENTER"` trên parent |
-
-> **Thứ tự bắt buộc cho mọi frame có auto-layout:**
-> 1. `layoutMode = "HORIZONTAL" | "VERTICAL"` — set đầu tiên
-> 2. `counterAxisSizingMode = "FIXED"` nếu chiều đó FIXED — set trước resize
-> 3. `resize(w, h)` — sau layoutMode và sizing modes FIXED
-> 4. `primaryAxisSizingMode = "AUTO"` nếu HUG — **set SAU resize()**, không trước. `resize()` reset mode về FIXED nên AUTO phải override lại sau.
-> 5. `appendChild(frame)` vào parent
-> 6. `layoutSizingHorizontal/Vertical = "FILL"` nếu FILL — **set SAU appendChild**
->
-> **DS instances**: luôn set `layoutSizingHorizontal = "FILL"` sau appendChild khi `sizing.width = "FILL"`. Dùng `{ fillWidth: true }` trong `addComponent`.
+| Sidebar section group | `paddingLeft/Right = 8`, `paddingTop/Bottom = 4` |
+| Card (input, content box) | `padding = 12` |
+| Toolbar inner | `paddingLeft/Right = 0` (gap đủ rồi) |
+| User block | `paddingLeft/Right = 12`, `paddingTop/Bottom = 4` |
 
 ---
 
