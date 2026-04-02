@@ -5,7 +5,7 @@ Tự động hóa pipeline: mô tả screen → wireframe → component map → 
 
 ## Design System
 - **Library**: shadcn/ui
-- **Figma file key**: `LiAE855pzu8Abe1z0BokO7`
+- **Figma file key**: `nDt8HbkyoVKOGngzzQgbZs`
 - **Cách dùng DS**: File mới + enable shadcn library qua Resources → Libraries
 
 ## Workflow (4 bước)
