@@ -1,8 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Figma Script — Agent Builder / Home
 // Screen: 1440x900, sidebar-left layout
-// Generated: 2026-04-01
-// Paste into Scripter plugin (Figma) and Run.
+// Generated: 2026-04-02 — runs via use_figma MCP
 // ─────────────────────────────────────────────────────────────────────────────
 
 const KEYS = {
@@ -60,8 +59,9 @@ async function main() {
   }
 
   // ── Root frame (1440x900, HORIZONTAL: sidebar + main) ──────────────────────
-  const root = figma.createFrame();
-  root.name = "Agent Builder / Home";
+  const root = findOrCreateFrame("Agent Builder / Home"); // reuse if exists
+  // Clear children to avoid duplicates on rerun
+  for (const child of [...root.children]) child.remove();
   root.layoutMode = "HORIZONTAL";        // set layoutMode TRƯỚC
   root.primaryAxisSizingMode = "FIXED"; // rồi lock sizing modes
   root.counterAxisSizingMode = "FIXED";
@@ -69,7 +69,6 @@ async function main() {
   root.itemSpacing = 0;
   root.fills = [{ type: "SOLID", color: hexToRgb("#ffffff") }];
   root.clipsContent = true;
-  figma.currentPage.appendChild(root);
 
   // ── SIDEBAR ─────────────────────────────────────────────────────────────────
   // FIXED width 260, FILL height (set AFTER appendChild)
@@ -659,6 +658,15 @@ function logProps(inst, key) {
     .forEach(([name, val]) =>
       console.log(`  · ${name}: ${val.type} = ${JSON.stringify(val.value)}`)
     );
+}
+
+/**
+ * Find existing frame by name in parent, or create a new one.
+ * Prevents duplicate frames on rerun.
+ */
+function findOrCreateFrame(name, parent = figma.currentPage) {
+  return parent.findChild(n => n.type === "FRAME" && n.name === name)
+    ?? (() => { const f = figma.createFrame(); f.name = name; parent.appendChild(f); return f; })();
 }
 
 function hexToRgb(hex) {
