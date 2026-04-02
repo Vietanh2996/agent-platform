@@ -30,6 +30,28 @@ use_figma(
 - Nếu `use_figma` trả về lỗi → đọc message, fix script, gọi lại
 - `figma-script.js` vẫn được lưu disk dù chạy qua MCP — để debug và track thay đổi
 
+### Giới hạn timeout — bắt buộc split script
+
+`use_figma` có timeout cứng. Mỗi `importComponentSetByKeyAsync` là 1 network round-trip → tích lũy nhanh.
+
+**Quy tắc:** nếu màn hình có **> 8 `importComponentSetByKeyAsync` calls** → **bắt buộc tách thành 2 MCP calls**:
+
+| Call | Nội dung |
+|---|---|
+| Part 1 | Font loads + icon pre-imports + sidebar/nav section |
+| Part 2 | Main content area (tìm root frame bằng `findChild`, không tạo lại) |
+
+Part 2 pattern:
+```js
+const root = figma.currentPage.findChild(n => n.type === "FRAME" && n.name === "<ScreenName>");
+const existing = root.findChild(n => n.name === "Main Content");
+if (existing) existing.remove();
+// ... render main content ...
+root.appendChild(mainContent);
+```
+
+Đếm imports trước khi generate: sidebar-left thông thường có ~10-12 imports → luôn split.
+
 ---
 
 ## Cách dùng Figma Plugin API đúng
