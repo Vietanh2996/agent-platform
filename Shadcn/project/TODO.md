@@ -33,6 +33,13 @@
   - Re-run chỉ phần thay đổi (findOrCreateFrame để không tạo duplicate)
   - Áp dụng feedback thành rule vào skill file tương ứng nếu mang tính tổng quát
 
-## Backlog / Future
+- [ ] **Enrich DS data: thêm componentProperties vào ds-components.json**
+  - Hiện tại chỉ có `variantOptions` — thiếu TEXT/BOOLEAN/INSTANCE_SWAP props
+  - Cần biết: text prop name, icon/prefix slot, boolean toggles của từng component
+  - Cách làm: build script pull componentProperties từ Figma 1 lần → lưu vào ds-components.json
+  - Unblock: UI Composer quyết định đúng variant + props mà không cần guess/hardcode
+  - Triggered bởi: Combobox prefix slot không biết tên prop, counter textarea không tắt được
+
+
 
 - [ ] **Text override** trong component instances chưa test đầy đủ (nav item labels vẫn là default DS)
