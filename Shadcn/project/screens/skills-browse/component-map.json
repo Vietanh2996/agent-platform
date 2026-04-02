@@ -1,0 +1,373 @@
+{
+  "screen": "skills-browse",
+  "generatedAt": "2026-04-02",
+  "layout": "sidebar-left",
+  "sections": [
+    {
+      "name": "Sidebar",
+      "position": "left",
+      "sizing": { "width": "FIXED", "widthValue": 260, "height": "FILL" },
+      "components": [
+        {
+          "id": "sidebar-header-trigger",
+          "wireframe_ref": "Sidebar > Header block > App name dropdown",
+          "component": "Sidebar / PopoverTrigger",
+          "label": "Fleet",
+          "iconName": "ChevronsUpDown",
+          "badge": null,
+          "variantProps": { "State": "Default" },
+          "notes": "App name dropdown — left side of header row"
+        },
+        {
+          "id": "sidebar-header-toggle",
+          "wireframe_ref": "Sidebar > Header block > Collapse toggle",
+          "component": "Sidebar / Header Button",
+          "label": null,
+          "iconName": "PanelLeft",
+          "badge": null,
+          "variantProps": { "State": "Default" },
+          "notes": "Collapse sidebar toggle — right side of header row"
+        },
+        {
+          "id": "sidebar-nav-chat",
+          "wireframe_ref": "Sidebar > Top nav group > Chat",
+          "component": "Sidebar / SidebarMenuButton",
+          "label": "Chat",
+          "iconName": "MessageSquare",
+          "badge": "3",
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Type": "Badge", "State": "Default", "Collapsed": "False" }
+        },
+        {
+          "id": "sidebar-nav-inbox",
+          "wireframe_ref": "Sidebar > Top nav group > Inbox",
+          "component": "Sidebar / SidebarMenuButton",
+          "label": "Inbox",
+          "iconName": "Inbox",
+          "badge": "3",
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Type": "Badge", "State": "Default", "Collapsed": "False" }
+        },
+        {
+          "id": "sidebar-agents-label",
+          "wireframe_ref": "Sidebar > My Agents group > Label",
+          "component": "Sidebar / SidebarGroupLabel",
+          "label": "My Agents",
+          "iconName": null,
+          "badge": null,
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Type": "Action", "State": "Default", "Text Size": "sm" }
+        },
+        {
+          "id": "sidebar-agents-empty",
+          "wireframe_ref": "Sidebar > My Agents group > Empty state",
+          "component": null,
+          "type": "text",
+          "label": "Create an agent to get started",
+          "iconName": null,
+          "badge": null,
+          "textStyle": "18bc7e1f33b627174309265d7e1c046264cf16bf",
+          "colorToken": "1933717cc251a338091aca27fdfa264aa1b0479a"
+        },
+        {
+          "id": "sidebar-explore-label",
+          "wireframe_ref": "Sidebar > Explore group > Label",
+          "component": "Sidebar / SidebarGroupLabel",
+          "label": "Explore",
+          "iconName": null,
+          "badge": null,
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Type": "Default", "State": "Default", "Text Size": "sm" }
+        },
+        {
+          "id": "sidebar-explore-integrations",
+          "wireframe_ref": "Sidebar > Explore group > Integrations",
+          "component": "Sidebar / SidebarMenuButton",
+          "label": "Integrations",
+          "iconName": "Zap",
+          "badge": null,
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Type": "Simple", "State": "Default", "Collapsed": "False" }
+        },
+        {
+          "id": "sidebar-explore-skills",
+          "wireframe_ref": "Sidebar > Explore group > Skills",
+          "component": "Sidebar / SidebarMenuButton",
+          "label": "Skills",
+          "iconName": "FileText",
+          "badge": null,
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Type": "Simple", "State": "Active", "Collapsed": "False" },
+          "notes": "Active state — user đang ở màn Skills"
+        },
+        {
+          "id": "sidebar-explore-templates",
+          "wireframe_ref": "Sidebar > Explore group > Templates",
+          "component": "Sidebar / SidebarMenuButton",
+          "label": "Templates",
+          "iconName": "Puzzle",
+          "badge": null,
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Type": "Simple", "State": "Default", "Collapsed": "False" }
+        },
+        {
+          "id": "sidebar-explore-workspace-agents",
+          "wireframe_ref": "Sidebar > Explore group > Workspace Agents",
+          "component": "Sidebar / SidebarMenuButton",
+          "label": "Workspace Agents",
+          "iconName": "Bot",
+          "badge": null,
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Type": "Simple", "State": "Default", "Collapsed": "False" }
+        },
+        {
+          "id": "sidebar-bottom-documentation",
+          "wireframe_ref": "Sidebar > Bottom nav group > Documentation",
+          "component": "Sidebar / SidebarMenuButton",
+          "label": "Documentation",
+          "iconName": "BookOpen",
+          "badge": null,
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Type": "Simple", "State": "Default", "Collapsed": "False" }
+        },
+        {
+          "id": "sidebar-bottom-settings",
+          "wireframe_ref": "Sidebar > Bottom nav group > Settings",
+          "component": "Sidebar / SidebarMenuButton",
+          "label": "Settings",
+          "iconName": "Settings",
+          "badge": null,
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Type": "Simple", "State": "Default", "Collapsed": "False" }
+        },
+        {
+          "id": "sidebar-user-avatar",
+          "wireframe_ref": "Sidebar > User block > Avatar",
+          "component": "Avatar",
+          "label": "VA",
+          "iconName": null,
+          "badge": null,
+          "variantProps": { "Type": "Fallback", "Size": "6 (24px)" }
+        },
+        {
+          "id": "sidebar-user-email",
+          "wireframe_ref": "Sidebar > User block > Email",
+          "component": null,
+          "type": "text",
+          "label": "vietanh.ngx29@gmail.com",
+          "iconName": null,
+          "badge": null,
+          "textStyle": "18bc7e1f33b627174309265d7e1c046264cf16bf",
+          "colorToken": "f73d9ec93a3682484e8af69077eaba20d5406a66"
+        }
+      ]
+    },
+    {
+      "name": "Page Header",
+      "position": "top",
+      "sizing": { "width": "FILL", "height": "HUG" },
+      "components": [
+        {
+          "id": "page-header-icon",
+          "wireframe_ref": "Page Header > Left > Icon",
+          "component": null,
+          "type": "text",
+          "label": "",
+          "iconName": "FileText",
+          "badge": null,
+          "notes": "Icon only — small, muted. Figma Writer render as plain icon frame"
+        },
+        {
+          "id": "page-header-title",
+          "wireframe_ref": "Page Header > Left > Title",
+          "component": null,
+          "type": "text",
+          "label": "Skills",
+          "iconName": null,
+          "badge": null,
+          "textStyle": "5626b770669ffbf7048f2fc2730c9f5f3cbc900b",
+          "colorToken": "aab20ced11a334856ec9331cf98dd2f1637ff70a"
+        },
+        {
+          "id": "page-header-subtitle",
+          "wireframe_ref": "Page Header > Left > Subtitle",
+          "component": null,
+          "type": "text",
+          "label": "Skills shared across all agents in this workspace",
+          "iconName": null,
+          "badge": null,
+          "textStyle": "18bc7e1f33b627174309265d7e1c046264cf16bf",
+          "colorToken": "1933717cc251a338091aca27fdfa264aa1b0479a"
+        },
+        {
+          "id": "page-header-browse-btn",
+          "wireframe_ref": "Page Header > Right > Browse Library button",
+          "component": "Button",
+          "label": "Browse Library",
+          "iconName": "BookOpen",
+          "badge": null,
+          "variantProps": { "Variant": "Outline", "Size": "Default", "State": "Default" }
+        },
+        {
+          "id": "page-header-create-btn",
+          "wireframe_ref": "Page Header > Right > Create Skill button",
+          "component": "Button",
+          "label": "Create Skill",
+          "iconName": "Plus",
+          "badge": null,
+          "variantProps": { "Variant": "Default", "Size": "Default", "State": "Default" },
+          "notes": "Primary button. Dropdown arrow (ChevronDown) on right side via second icon slot"
+        }
+      ]
+    },
+    {
+      "name": "Content Bar",
+      "position": "top",
+      "sizing": { "width": "FILL", "height": "HUG" },
+      "components": [
+        {
+          "id": "content-search",
+          "wireframe_ref": "Content Bar > Left > Search input",
+          "component": "Input",
+          "label": "Search...",
+          "iconName": "Search",
+          "badge": null,
+          "sizing": { "width": "FIXED", "widthValue": 200 },
+          "variantProps": { "Type": "Default", "Filled": "False", "State": "Default" },
+          "notes": "Placeholder text: 'Search...'"
+        },
+        {
+          "id": "content-filter-all-skills",
+          "wireframe_ref": "Content Bar > Left > All Skills filter",
+          "component": "Button",
+          "label": "All Skills",
+          "iconName": "ChevronDown",
+          "badge": null,
+          "variantProps": { "Variant": "Outline", "Size": "sm", "State": "Default" },
+          "notes": "Filter dropdown trigger — shows filter options on click"
+        },
+        {
+          "id": "content-view-grid",
+          "wireframe_ref": "Content Bar > Right > Grid view toggle",
+          "component": "Button",
+          "label": null,
+          "iconName": "LayoutGrid",
+          "badge": null,
+          "variantProps": { "Variant": "Ghost", "Size": "icon-sm", "State": "Default" },
+          "notes": "Active state when grid view selected"
+        },
+        {
+          "id": "content-view-list",
+          "wireframe_ref": "Content Bar > Right > List view toggle",
+          "component": "Button",
+          "label": null,
+          "iconName": "List",
+          "badge": null,
+          "variantProps": { "Variant": "Ghost", "Size": "icon-sm", "State": "Default" }
+        }
+      ]
+    },
+    {
+      "name": "Skills List Area",
+      "position": "main",
+      "sizing": { "width": "FILL", "height": "FILL" },
+      "components": [],
+      "notes": "Empty state — no skills yet. Background #fafafa. No content rendered."
+    },
+    {
+      "name": "Skill Library Modal",
+      "position": "modal",
+      "sizing": { "width": "FIXED", "widthValue": 700, "height": "FIXED", "heightValue": 560 },
+      "align": { "horizontal": "CENTER", "vertical": "CENTER" },
+      "components": [
+        {
+          "id": "modal-header-icon",
+          "wireframe_ref": "Skill Library Modal > Header > Icon",
+          "component": null,
+          "type": "text",
+          "label": "",
+          "iconName": "Library",
+          "badge": null,
+          "notes": "Small icon, muted"
+        },
+        {
+          "id": "modal-header-title",
+          "wireframe_ref": "Skill Library Modal > Header > Title",
+          "component": null,
+          "type": "text",
+          "label": "Skill Library",
+          "iconName": null,
+          "badge": null,
+          "textStyle": "5626b770669ffbf7048f2fc2730c9f5f3cbc900b",
+          "colorToken": "aab20ced11a334856ec9331cf98dd2f1637ff70a"
+        },
+        {
+          "id": "modal-header-subtitle",
+          "wireframe_ref": "Skill Library Modal > Header > Subtitle",
+          "component": null,
+          "type": "text",
+          "label": "Browse pre-built skills",
+          "iconName": null,
+          "badge": null,
+          "textStyle": "18bc7e1f33b627174309265d7e1c046264cf16bf",
+          "colorToken": "1933717cc251a338091aca27fdfa264aa1b0479a"
+        },
+        {
+          "id": "modal-left-search",
+          "wireframe_ref": "Skill Library Modal > Left Panel > Search input",
+          "component": "Input",
+          "label": "Search...",
+          "iconName": "Search",
+          "badge": null,
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Type": "Default", "Filled": "False", "State": "Default" }
+        },
+        {
+          "id": "modal-left-filter-all",
+          "wireframe_ref": "Skill Library Modal > Left Panel > All filter pill",
+          "component": "Button",
+          "label": "All",
+          "iconName": null,
+          "badge": null,
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Variant": "Secondary", "Size": "sm", "State": "Default" },
+          "notes": "Active/selected state"
+        },
+        {
+          "id": "modal-left-categories-label",
+          "wireframe_ref": "Skill Library Modal > Left Panel > CATEGORIES label",
+          "component": null,
+          "type": "text",
+          "label": "CATEGORIES",
+          "iconName": null,
+          "badge": null,
+          "textStyle": "845e2807d7bd156cd78a7dc1a9d57c3ae578e309",
+          "colorToken": "1933717cc251a338091aca27fdfa264aa1b0479a",
+          "notes": "text-xs/normal + muted — uppercase label"
+        },
+        {
+          "id": "modal-left-category-items",
+          "wireframe_ref": "Skill Library Modal > Left Panel > Category items",
+          "component": "Button",
+          "label": "Research",
+          "iconName": null,
+          "badge": null,
+          "sizing": { "width": "FILL" },
+          "variantProps": { "Variant": "Ghost", "Size": "sm", "State": "Default" },
+          "repeat": "Research, Sales, Productivity, Marketing, Product",
+          "notes": "5 category items — plain ghost buttons, left-aligned text"
+        },
+        {
+          "id": "modal-right-skill-card",
+          "wireframe_ref": "Skill Library Modal > Right Panel > Skill card",
+          "component": null,
+          "label": null,
+          "iconName": "FileText",
+          "badge": null,
+          "repeat": "12 cards: Deep Research, Account Briefing, Email Triage, Marketing Psychology, Copywriting, Cold Email, SEO Audit, Content Strategy, Social Content, Competitive Analysis, Defining Product Vision, Writing PRDs",
+          "notes": "Custom card: icon (FileText, small, muted) + title (text-sm/medium) + description (text-sm/normal, muted, 2-line truncate). 3-column grid layout. No DS component — custom frame."
+        }
+      ]
+    }
+  ]
+}
