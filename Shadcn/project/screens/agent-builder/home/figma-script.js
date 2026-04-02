@@ -188,6 +188,16 @@ async function main() {
     await swapIcon(inst, "Icon Name#3278:95", item.icon, icons, warnings);
   }
 
+  // Spacer — pushes bottom nav + user block xuống đáy
+  const spacer = figma.createFrame();
+  spacer.name = "Spacer";
+  spacer.layoutMode = "VERTICAL";
+  spacer.primaryAxisSizingMode = "AUTO";
+  spacer.counterAxisSizingMode = "AUTO";
+  spacer.fills = [];
+  sidebar.appendChild(spacer);
+  spacer.layoutSizingVertical = "FILL"; // FILL remaining height
+
   addDivider(sidebar);
 
   // Bottom nav: Documentation, Settings
@@ -342,10 +352,12 @@ async function main() {
     { "State": "Default", "Filled": "False" }, warnings,
     { fillWidth: true, wireframeRef: "Main Content > Center panel > Chat input card > Textarea" }
   );
-  // logProps already called inside addComponent — check console for prop names
+  logProps(textareaInst, KEYS.textarea);
   setProps(textareaInst, {
     "Placeholder Text#183:5": "Write your message...",
-    "Counter#21247:18":       false,
+    "Counter#21247:18":       false,  // hide counter
+    "Show Counter#183:8":     false,  // alt prop name
+    "Counter#183:6":          false,  // alt prop name
   }, warnings);
 
   // Toolbar: HORIZONTAL SPACE_BETWEEN, fills card width
@@ -395,8 +407,15 @@ async function main() {
     { "Filled": "True", "State": "Default" }, warnings,
     { wireframeRef: "Main Content > Center panel > Chat input card > Toolbar > Model selector" }
   );
-  // logProps will print exact prop names. overrideFirstText as safe fallback.
-  setProps(comboboxInst, { "Value text#21235:14": "Sonnet 4.6" }, warnings);
+  logProps(comboboxInst, KEYS.combobox);
+  // Try multiple prop name variants — logProps console output sẽ reveal đúng tên
+  setProps(comboboxInst, {
+    "Value text#21235:14": "Sonnet 4.6",
+    "Value Text#21235:14": "Sonnet 4.6",
+    "Placeholder#21235:0": "Sonnet 4.6",
+  }, warnings);
+  overrideFirstText(comboboxInst, "Sonnet 4.6", warnings); // fallback
+  // TODO: Anthropic logo prefix — cần custom icon asset, chưa có trong DS
 
   // Toolbar Right: [voice btn] [send btn]
   const toolbarRight = figma.createFrame();
