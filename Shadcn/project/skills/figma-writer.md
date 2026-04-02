@@ -13,13 +13,22 @@ Bạn là một Figma plugin developer. Nhiệm vụ là đọc component-map.js
 - `ds/ds-styles.json`, `ds/ds-variables.json` — keys đã được ui-composer resolve và lưu vào component-map.json rồi, figma-writer chỉ nhận và áp dụng
 
 ## Output
-File: `screens/<screen-name>/figma-script.js`
+File: `screens/<screen-name>/figma-script.js` — lưu xuống disk làm artifact (debug + version control)
 
-## Cách chạy script trong Figma
-1. Mở Figma → Plugins → tìm **Scripter** (free, by Figma)
-2. Paste nội dung `figma-script.js` vào editor
-3. Bấm **Run**
-4. Màn hình xuất hiện trên canvas tại vị trí hiện tại
+## Cách chạy script
+
+Sau khi lưu file xong, gọi MCP tool:
+
+```
+use_figma(
+  fileKey = "LiAE855pzu8Abe1z0BokO7",
+  jsCode  = <nội dung figma-script.js>
+)
+```
+
+- **Không** paste thủ công vào Scripter
+- Nếu `use_figma` trả về lỗi → đọc message, fix script, gọi lại
+- `figma-script.js` vẫn được lưu disk dù chạy qua MCP — để debug và track thay đổi
 
 ---
 
@@ -130,9 +139,20 @@ main().catch(console.error);
 ```
 
 ### 2. Root screen frame
+
+**Luôn dùng `findOrCreateFrame`** thay vì `figma.createFrame()` trực tiếp — tránh tạo duplicate khi chạy lại script:
+
 ```js
-const rootFrame = figma.createFrame();
-rootFrame.name = "<ScreenName>";
+function findOrCreateFrame(name, parent = figma.currentPage) {
+  return parent.findChild(n => n.type === "FRAME" && n.name === name)
+    ?? (() => { const f = figma.createFrame(); f.name = name; parent.appendChild(f); return f; })();
+}
+```
+
+Áp dụng cho root frame và tất cả section frames con:
+
+```js
+const rootFrame = findOrCreateFrame("<ScreenName>"); // tìm hoặc tạo mới, không duplicate
 rootFrame.layoutMode = "HORIZONTAL";   // set layoutMode TRƯỚC
 rootFrame.primaryAxisSizingMode = "FIXED"; // lock sizing modes SAU layoutMode
 rootFrame.counterAxisSizingMode = "FIXED"; // ← nếu resize() gọi TRƯỚC layoutMode, Figma reset về AUTO
@@ -140,7 +160,6 @@ rootFrame.resize(1440, 900);               // resize SAU khi modes đã lock
 rootFrame.itemSpacing = 0;
 rootFrame.fills = [{ type: "SOLID", color: hexToRgb("#ffffff") }];
 rootFrame.clipsContent = true;
-figma.currentPage.appendChild(rootFrame);
 ```
 
 **Layout theo loại màn hình:**
@@ -152,8 +171,7 @@ figma.currentPage.appendChild(rootFrame);
 ### 3. Section frames
 ```js
 function createGroup(parent, name, { width = 260, paddingTop = 0, paddingBottom = 0, gap = 2 } = {}) {
-  const frame = figma.createFrame();
-  frame.name = name;
+  const frame = findOrCreateFrame(name, parent);
   frame.layoutMode = "VERTICAL";
   frame.primaryAxisSizingMode = "AUTO";
   frame.counterAxisSizingMode = "FIXED";
@@ -162,7 +180,7 @@ function createGroup(parent, name, { width = 260, paddingTop = 0, paddingBottom 
   frame.paddingLeft = 8; frame.paddingRight = 8;
   frame.paddingTop = paddingTop; frame.paddingBottom = paddingBottom;
   frame.fills = [];
-  parent.appendChild(frame);
+  // không cần appendChild — findOrCreateFrame đã xử lý
   return frame;
 }
 ```
@@ -608,8 +626,7 @@ function overrideFirstText(inst, newText, warnings = []) {
 }
 
 function createGroup(parent, name, { width = 260, paddingTop = 0, paddingBottom = 0, gap = 2 } = {}) {
-  const frame = figma.createFrame();
-  frame.name = name;
+  const frame = findOrCreateFrame(name, parent);
   frame.layoutMode = "VERTICAL";
   frame.primaryAxisSizingMode = "AUTO";
   frame.counterAxisSizingMode = "FIXED";
