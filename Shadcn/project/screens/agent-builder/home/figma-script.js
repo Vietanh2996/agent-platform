@@ -407,15 +407,12 @@ async function main() {
     { "Filled": "True", "State": "Default" }, warnings,
     { wireframeRef: "Main Content > Center panel > Chat input card > Toolbar > Model selector" }
   );
-  logProps(comboboxInst, KEYS.combobox);
-  // Try multiple prop name variants — logProps console output sẽ reveal đúng tên
   setProps(comboboxInst, {
-    "Value text#21235:14": "Sonnet 4.6",
-    "Value Text#21235:14": "Sonnet 4.6",
-    "Placeholder#21235:0": "Sonnet 4.6",
+    "Value text#21582:119": "Sonnet 4.6", // value text prop
+    "Prefix 2#21582:97":   true,          // Kbd prefix
+    "Prefix 1#21582:86":   false,         // icon prefix off
   }, warnings);
-  overrideFirstText(comboboxInst, "Sonnet 4.6", warnings); // fallback
-  // TODO: Anthropic logo prefix — cần custom icon asset, chưa có trong DS
+  comboboxInst.layoutSizingHorizontal = "HUG"; // hug content — no stretch
 
   // Toolbar Right: [voice btn] [send btn]
   const toolbarRight = figma.createFrame();
