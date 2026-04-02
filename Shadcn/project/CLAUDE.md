@@ -26,6 +26,7 @@ use_figma MCP                  → UI xuất hiện trực tiếp trên Figma ca
 - `skills/wireframe-planner.md` — phân tích yêu cầu → text wireframe có cấu trúc
 - `skills/ui-composer.md` — compose screen: map element → shadcn component + variantProps + custom layout spec
 - `skills/figma-writer.md` — generate Figma Plugin JS script
+- `skills/skill-guide.md` — quy trình chuẩn để chuyển feedback thành rule: phân loại feedback, xác định layer, viết rule tổng quát, test & merge
 
 ## DS Data Files
 - `ds/ds-components.json` — 168 component sets với variantOptions + keys (dùng trong ui-composer & figma-writer)
@@ -35,31 +36,12 @@ use_figma MCP                  → UI xuất hiện trực tiếp trên Figma ca
 - `ds/ds-index.json` — file gốc đầy đủ (nguồn để regenerate các file trên nếu DS update)
 - `ds/design-skill.md` — quyết định thiết kế + design rules tích lũy theo thời gian
 
-## Screens đã làm
-- `screens/fleet-sidebar/` — sidebar navigation (tested, working)
-
 ## Khi thêm rule vào bất kỳ skill file nào
 
 Bắt buộc check theo `skills/skill-guide.md` trước khi save:
 1. Rule có đủ tổng quát không? (không specific cho 1 component/màn hình)
 2. Đã có rule tương tự chưa? → merge thay vì duplicate
 3. Đúng layer chưa? (design-skill / figma-writer / ui-composer / wireframe-planner)
-
-## Quy tắc quan trọng
-
-### Figma Script
-- Dùng `figma.importComponentSetByKeyAsync(key)` → `.defaultVariant` → `.createInstance()`
-- KHÔNG dùng `importComponentByKeyAsync` (cần individual variant key, không phải set key)
-- Dùng auto-layout (`layoutMode`, `itemSpacing`, `padding`) thay vì set x/y tay
-- Component `null` trong component-map → xem TODO.md (đang redesign custom component spec)
-
-### UI Composer
-- Chỉ dùng component có trong `ds-index.json`
-- `variantOptions` phải đúng giá trị trong DS — không tự đặt
-
-### Wireframe Planner
-- Không đề cập tên shadcn component trong wireframe
-- Format: Meta → Layout Structure → Sections → Interactions → States
 
 ## Việc đang làm / backlog
 Xem `TODO.md`

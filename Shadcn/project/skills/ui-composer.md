@@ -19,7 +19,7 @@ File: `screens/<screen-name>/component-map.json`
 
 ## Quy tắc
 
-1. **Chỉ dùng component có trong ds-index.json** — không tự đặt tên component ngoài DS
+1. **Chỉ dùng component có trong ds-index.json** — không tự đặt tên component ngoài DS. Nếu không tìm được component phù hợp → ghi `"component": null` kèm `"customSpec"` mô tả cấu trúc visual để figma-writer vẽ bằng primitives (frame, text, rectangle)
 2. **Chọn đúng variantProps** — giá trị phải nằm trong `variantOptions` của component đó
 3. **State mặc định là "Default"** — chỉ ghi thêm state khác nếu wireframe đề cập
 4. **Mỗi element wireframe → 1 entry** trong component-map — không bỏ qua element nào
